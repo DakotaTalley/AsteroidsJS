@@ -28,6 +28,10 @@ function gameTick() {
         spaceship.decelerate();
     }
 
+    if (keys[32]) {
+        spaceship.shoot();
+    }
+
     spaceship.updatePosition();
 
     redrawCanvas();

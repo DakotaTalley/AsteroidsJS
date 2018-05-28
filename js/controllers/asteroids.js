@@ -58,34 +58,6 @@ function redrawCanvas() {
     //canvas.drawAsteroid(500, 100, 0, 0, 2);
 }
 
-// Return array of x and y outside of the window for spawning
-function genOutsideWin(shpSize){
-    var arr = [];
-    var canvasX = canvas.width;
-    var canvasY = canvas.height;
-    // Left or Right from 0
-    arr[0] = Math.round(Math.random()) * 2 - 1;
-    // Up or Down from 0
-    arr[1] = Math.round(Math.random()) * 2 - 1;
-    // If both are negative, set one lower than screen size
-    if(arr[0] < 1 && arr[1] < 1){
-        Math.random() > 0.5 ? arr[0] = canvasX - shpSize : arr[1] = canvasY - shpSize;
-        return arr;      
-    }
-    //if both are positive, randomize, then pick one and make it larger than screen size
-    if(arr[0] > 1 && arr[0] > 1){
-        arr[0] = Math.random() * canvasX;
-        arr[1] = Math.random() * canvasY;
-        Math.random() > 0.5 ? arr[0] = canvasX + shpSize : arr[1] = canvasY + shpSize;
-        return arr;
-    }
-
-    arr[0] = Math.random() * canvasX;
-    arr[1] = Math.random() * canvasY;
-    arr[0] < 1 ? arr[0] = canvasX - shpSize : arr[1] = canvasY - shpSize;
-    return arr;
-}
-
 var GAME_FPS = 60;
 
 var msBetweenFrames = 1000 / GAME_FPS;

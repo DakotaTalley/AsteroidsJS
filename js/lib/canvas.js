@@ -31,12 +31,12 @@ function Canvas(id) {
         this.context.translate((this.width / 2) + x, (this.height / 2) + y);
         var numberOfSides = 10;
         this.context.beginPath();
-        this.context.moveTo (points[0][0] , points[1][0]);          
+        this.context.moveTo (points[0][0] , points[0][1]);          
         for (var i = 1; i <= numberOfSides; i += 1) 
         {
-            this.context.lineTo(points[0][i] , points[1][i]);
+            this.context.lineTo(points[i][0] , points[i][1]);
         }
-        this.context.lineTo(points[0][0], points[1][0]);
+        this.context.lineTo(points[0][0], points[0][1]);
         this.context.stroke();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
     }

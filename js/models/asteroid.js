@@ -4,16 +4,17 @@ function Asteroid(x, y, dx, dy, size) {
     this.dx = dx;
     this.dy = dy;
     this.size = size;
+    this.numSides = randomNumber(5, 10);
     this.points = [];
 
-    this.generateShape = function(numSides) {       
-        for (var i = 0; i <= numSides; i += 1) {
-            this.points[i] = [this.x + (this.size * 20) * Math.cos(i * 2 * Math.PI / numSides),
-            y + (this.size * 20) * Math.sin(i * 2 * Math.PI / numSides)];
+    this.generateShape = function() {       
+        for (var i = 0; i <= this.numSides; i += 1) {
+            this.points[i] = [this.x + (this.size * 20) * Math.cos(i * 2 * Math.PI / this.numSides),
+            y + (this.size * 20) * Math.sin(i * 2 * Math.PI / this.numSides)];
         }
     }
 
-    this.generateShape(randomNumber(5, 10));
+    this.generateShape();
 }
 
 
@@ -37,25 +38,25 @@ function genOutsideWin(shpSize){
         return [x,y];      
     }
     //if both are positive, randomize, then pick one and make it larger than screen size
-    if(arr[0] > 1 && arr[0] > 1){
-        arr[0] = Math.random() * canvasX;
-        arr[1] = Math.random() * canvasY;
+    if(x > 1 && y > 1){
+        x = Math.random() * canvasX;
+        y = Math.random() * canvasY;
         if(Math.random() > 0.5){
-            arr[0] = canvasX + shpSize;
+            x = canvasX + shpSize;
         }else{
-            arr[1] = canvasY + shpSize;
+            y = canvasY + shpSize;
         }
-        return arr;
+        return [x,y];
     }
 
-    arr[0] = Math.random() * canvasX;
-    arr[1] = Math.random() * canvasY;
-    if(arr[0] < 1){
-        arr[0] = canvasX - shpSize;
+    x = Math.random() * canvasX;
+    y = Math.random() * canvasY;
+    if(x < 1){
+        x = canvasX - shpSize;
     }else{
-        arr[1] = canvasY - shpSize;
+        y = canvasY - shpSize;
     }
-    return arr;
+    return [x,y];
 }
 
 // Gets a random number between @param min and @param max

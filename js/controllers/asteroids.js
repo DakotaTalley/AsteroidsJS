@@ -1,6 +1,10 @@
 var canvas = new Canvas("game-canvas");
 var spaceship = new Spaceship();
-var asteroid = new Asteroid(100, 100, 0, 0, 3);
+
+var shpSize = randomNumber(1, 3);
+var astLoc = genOutsideWin(shpSize);
+
+var asteroid = new Asteroid(astLoc[0], astLoc[1], 0, 0, shpSize);
 
 var keys = [];
 window.onkeyup = function(e) { keys[e.keyCode] = false; }

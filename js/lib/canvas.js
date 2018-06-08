@@ -29,13 +29,13 @@ function Canvas(id) {
         this.context.lineWidth = 1;
 
         this.context.translate((this.width / 2) + x, (this.height / 2) + y);
-        var numberOfSides = 10;
         this.context.beginPath();
-        this.context.moveTo (points[0][0], points[0][1]);          
-        for (var i = 1; i <= numberOfSides; i += 1) 
+        this.context.moveTo (points[0][0] , points[0][1]);          
+        for (var i = 1; i < points.length; i += 1) 
         {
-            this.context.lineTo (points[i][0], points[i][1]);
+            this.context.lineTo(points[i][0] , points[i][1]);
         }
+        this.context.lineTo(points[0][0], points[0][1]);
         this.context.stroke();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
     }

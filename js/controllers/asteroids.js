@@ -1,10 +1,10 @@
 var canvas = new Canvas("game-canvas");
 var spaceship = new Spaceship();
 
-var shpSize = randomNumber(1, 3);
-var astLoc = genOutsideWin(shpSize);
+//var shpSize = randomNumber(1, 3);
+//var astLoc = genOutsideWin(shpSize);
 
-var asteroid = new Asteroid(astLoc[0], astLoc[1], 0, 0, shpSize);
+//var asteroid = new Asteroid(astLoc[0], astLoc[1], 0, 0, shpSize);
 
 var keys = [];
 window.onkeyup = function(e) { keys[e.keyCode] = false; }
@@ -16,11 +16,11 @@ function gameTick() {
     
     // HANDLE ROTATION
     if(keys[37]) {
-        spaceship.rotateLeft();
+        spaceship.rotate(-5);
     }
 
     if(keys[39]) {
-        spaceship.rotateRight();
+        spaceship.rotate(5);
     }
 
     // Acceleration / Deceleration
@@ -54,7 +54,7 @@ function queueTick() {
 function redrawCanvas() {
     canvas.setBackground("#000000");
     canvas.drawSpaceship("#FFFFFF", spaceship.x, spaceship.y, spaceship.orientation);
-    canvas.drawAsteroid(asteroid.points, asteroid.x, asteroid.y);
+    //canvas.drawAsteroid(asteroid.points, asteroid.x, asteroid.y);
     //canvas.drawAsteroid(500, 100, 0, 0, 2);
 }
 

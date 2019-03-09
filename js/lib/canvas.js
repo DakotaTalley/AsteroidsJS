@@ -23,20 +23,22 @@ function Canvas(id) {
 
     }
 
-    this.drawAsteroid = function(points, x, y, orientation) {
-        this.context.strokeStyle = '#FFFFFF'
-        this.context.lineWidth = 1;
+    this.drawAsteroid = function(arr) {
+        for (item in asteroids) {
+            this.context.strokeStyle = '#FFFFFF'
+            this.context.lineWidth = 1;
 
-        this.context.translate((this.width / 2) + x, (this.height / 2) + y);
-        this.context.beginPath();
-        this.context.moveTo (points[0][0] , points[0][1]);          
-        for (var i = 1; i < points.length; i += 1) 
-        {
-            this.context.lineTo(points[i][0] , points[i][1]);
+            this.context.translate((this.width / 2) + asteroids[item].x, (this.height / 2) + asteroids[item].y);
+            this.context.beginPath();
+            this.context.moveTo (asteroids[item].points[0][0] , asteroids[item].points[0][1]);          
+            for (var i = 1; i < asteroids[item].points.length; i += 1) 
+            {
+                this.context.lineTo(asteroids[item].points[i][0] , asteroids[item].points[i][1]);
+            }
+            this.context.lineTo(asteroids[item].points[0][0], asteroids[item].points[0][1]);
+            this.context.stroke();
+            this.context.setTransform(1, 0, 0, 1, 0, 0);
         }
-        this.context.lineTo(points[0][0], points[0][1]);
-        this.context.stroke();
-        this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     this.drawEntities = function(arr) {

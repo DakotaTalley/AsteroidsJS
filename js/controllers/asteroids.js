@@ -3,9 +3,6 @@ var spaceship = new Spaceship();
 
 var shpSize = 1;
 var frame = 1;
-//var astLoc = genOutsideWin(shpSize);
-
-var asteroid = new Asteroid(0, 100, 0, -1, shpSize);
 
 var keys = [];
 window.onkeyup = function(e) { keys[e.keyCode] = false; }
@@ -15,11 +12,13 @@ var asteroids = [];
 var entities = [];
 
 function gameTick() {
-    if (frame < 61) {
+    // Frame Counter
+    if (frame <= GAME_FPS) {
         frame += 1;
     } else {
         frame = 1;
     }
+
     // HANDLE ROTATION
     if(keys[37]) {
         spaceship.rotate(-5);
@@ -38,30 +37,35 @@ function gameTick() {
         spaceship.decelerate();
     }
 
+    // Shooting
     if (keys[32]) {
-        if(entities.length < 7 && frame % 15 == 0) {
+        if (entities.length < 10 && frame % 15 == 0) {
             entities.push(spaceship.shoot());
         };
     }
 
-    // Begin Asteroid Spawn Logic //
-    if (entities.includes(0)) {
-        entity = entities.indexOf(0)
-        shpSize = 1;
-        entities[entity] = new Asteroid(0, 100, 0, -1, shpSize);
+    // Asteroid Spawning
+    if (asteroids.length < 5 && frame % 30 == 0) {
+        asteroids.push(new Asteroid(0, 100, 0, -1, shpSize));
     }
 
-    //asteroid.rotate(5);
 
+    // Update Positions
     spaceship.updatePosition();
 
-    if(entities.length > 1) {
+    if(entities.length > 0) {
         for (item in entities) {
             entities[item].updatePosition();
         }
     }
 
-    asteroid.updatePosition();
+    if(asteroids.length > 0) {
+        for (item in asteroids) {
+            asteroids[item].updatePosition();
+        }
+    }
+
+    //asteroid.rotate(5);
 
     redrawCanvas();
 
@@ -79,9 +83,8 @@ function queueTick() {
 function redrawCanvas() {
     canvas.setBackground("#000000");
     canvas.drawSpaceship("#FFFFFF", spaceship.x, spaceship.y, spaceship.orientation);
-    canvas.drawAsteroid(asteroid.points, asteroid.x, asteroid.y, asteroid.orientation);
+    canvas.drawAsteroid(asteroids);
     canvas.drawEntities(entities);
-    //canvas.drawAsteroid(500, 100, 0, 0, 2);
 }
 
 var GAME_FPS = 60;

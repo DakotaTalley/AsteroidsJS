@@ -53,6 +53,14 @@ function gameTick() {
     // Update Positions
     spaceship.updatePosition();
 
+    if (spaceship.x < -400 || spaceship.x > 400) {
+        spaceship.setX(-spaceship.x);
+    }
+
+    if (spaceship.y < -300 || spaceship.y > 300) {
+        spaceship.setY(-spaceship.y);
+    }
+
     if(entities.length > 0) {
         for (item in entities) {
             entities[item].updatePosition();

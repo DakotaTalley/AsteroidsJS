@@ -1,23 +1,21 @@
-function Asteroid(x, y, dx, dy, size) {
-    this.x = x;
-    this.y = y;
-    this.dx = dx;
-    this.dy = dy;
-    this.size = size;
-    this.numSides = randomNumber(5, 10);
-    this.points = [];
+class Asteroid extends Entity {
+    constructor(x, y, dx, dy, size) {
+        super(x, y, dx, dy, 0, 0);
 
-    this.generateShape = function() {       
+        this.size = size;
+        this.numSides = 6;
+
+        this.points = [];
+       
         for (var i = 0; i <= this.numSides; i += 1) {
             this.points[i] = [this.x + (this.size * 20) * Math.cos(i * 2 * Math.PI / this.numSides),
             y + (this.size * 20) * Math.sin(i * 2 * Math.PI / this.numSides)];
-        }
+        };
     }
 
-    this.generateShape();
 }
 
-
+/*
 // Return array of x and y outside of the window for spawning
 function genOutsideWin(shpSize){
     var x;
@@ -59,10 +57,4 @@ function genOutsideWin(shpSize){
     return [x,y];
 }
 
-// Gets a random number between @param min and @param max
-// * Max is inclusive in this function *
-function randomNumber(min, max){
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+*/

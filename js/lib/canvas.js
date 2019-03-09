@@ -24,7 +24,7 @@ function Canvas(id) {
 
     }
 
-    this.drawAsteroid = function(points, x, y) {
+    this.drawAsteroid = function(points, x, y, orientation) {
         this.context.strokeStyle = '#FFFFFF'
         this.context.lineWidth = 1;
 

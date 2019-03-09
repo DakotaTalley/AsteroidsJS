@@ -1,16 +1,16 @@
 var canvas = new Canvas("game-canvas");
 var spaceship = new Spaceship();
 
-//var shpSize = randomNumber(1, 3);
+var shpSize = 1;
 //var astLoc = genOutsideWin(shpSize);
 
-//var asteroid = new Asteroid(astLoc[0], astLoc[1], 0, 0, shpSize);
+var asteroid = new Asteroid(0, 100, 0, -1, shpSize);
 
 var keys = [];
 window.onkeyup = function(e) { keys[e.keyCode] = false; }
 window.onkeydown = function(e) { keys[e.keyCode] = true; }
 
-var entities = [];
+var entities = [0, 0, 0, 0, 0];
 
 function gameTick() {
     
@@ -36,7 +36,18 @@ function gameTick() {
         spaceship.shoot();
     }
 
+    // Begin Asteroid Spawn Logic //
+    if (entities.includes(0)) {
+        entity = entities.indexOf(0)
+        shpSize = 1;
+        entities[entity] = new Asteroid(0, 100, 0, -1, shpSize);
+    }
+
+    asteroid.rotate(5);
+
     spaceship.updatePosition();
+
+    asteroid.updatePosition();
 
     redrawCanvas();
 
@@ -54,7 +65,7 @@ function queueTick() {
 function redrawCanvas() {
     canvas.setBackground("#000000");
     canvas.drawSpaceship("#FFFFFF", spaceship.x, spaceship.y, spaceship.orientation);
-    //canvas.drawAsteroid(asteroid.points, asteroid.x, asteroid.y);
+    canvas.drawAsteroid(asteroid.points, asteroid.x, asteroid.y, asteroid.orientation);
     //canvas.drawAsteroid(500, 100, 0, 0, 2);
 }
 

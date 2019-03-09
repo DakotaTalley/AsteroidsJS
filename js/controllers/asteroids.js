@@ -1,5 +1,7 @@
 var canvas = new Canvas("game-canvas");
 var spaceship = new Spaceship();
+var width = canvas.width;
+var height = canvas.height;
 
 var shpSize = 1;
 var frame = 1;
@@ -51,25 +53,17 @@ function gameTick() {
 
 
     // Update Positions
-    spaceship.updatePosition();
-
-    if (spaceship.x < -400 || spaceship.x > 400) {
-        spaceship.setX(-spaceship.x);
-    }
-
-    if (spaceship.y < -300 || spaceship.y > 300) {
-        spaceship.setY(-spaceship.y);
-    }
+    spaceship.updatePosition(width, height);
 
     if(entities.length > 0) {
         for (item in entities) {
-            entities[item].updatePosition();
+            entities[item].updatePosition(width, height);
         }
     }
 
     if(asteroids.length > 0) {
         for (item in asteroids) {
-            asteroids[item].updatePosition();
+            asteroids[item].updatePosition(width, height);
         }
     }
 

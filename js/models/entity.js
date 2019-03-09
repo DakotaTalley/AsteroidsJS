@@ -20,9 +20,17 @@ class Entity {
         this.y = y;
     }
 
-    updatePosition() {
+    updatePosition(width, height) {
         this.x += this.dx;
         this.y += this.dy;
+
+        if (this.x < -(width / 2) || this.x > (width / 2)) {
+            this.setX(-this.x);
+        }
+    
+        if (this.y < -(height / 2) || this.y > (height / 2)) {
+            this.setY(-this.y);
+        }
     }
 
     accelerate() {

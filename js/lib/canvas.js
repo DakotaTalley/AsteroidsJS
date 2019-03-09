@@ -39,4 +39,20 @@ function Canvas(id) {
         this.context.stroke();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
+
+    this.drawEntities = function(arr) {
+        for (item in entities) {
+            this.context.strokeStyle = '#FFFFFF';
+            this.context.lineWidth = 1;
+
+            this.context.translate((this.width / 2) + entities[item].x, (this.height /2) + entities[item].y);
+            this.context.beginPath();
+            this.context.moveTo(0, -10);
+            this.context.moveTo(-10, 0);
+            this.context.moveTo(-10, 10);
+            this.context.moveTo(10, 10);
+            this.context.fill();
+            this.context.setTransform(1, 0, 0, 1, 0, 0);
+        }
+    }
 }

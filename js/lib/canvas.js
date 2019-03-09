@@ -23,19 +23,19 @@ function Canvas(id) {
 
     }
 
-    this.drawAsteroid = function(arr) {
+    this.drawAsteroids = function(arr) {
         for (item in asteroids) {
+            ast = asteroids[item];
             this.context.strokeStyle = '#FFFFFF'
             this.context.lineWidth = 1;
-
-            this.context.translate((this.width / 2) + asteroids[item].x, (this.height / 2) + asteroids[item].y);
+            // To Do: Why /100 works?
+            this.context.translate((this.width / 2) + ast.x / 100, (this.height / 2) + ast.y / 100);
+            this.context.moveTo (ast.x + ast.size * Math.cos(1), ast.y + ast.size * Math.sin(1));
             this.context.beginPath();
-            this.context.moveTo (asteroids[item].points[0][0] , asteroids[item].points[0][1]);          
-            for (var i = 1; i < asteroids[item].points.length; i += 1) 
+            for (var i = 0; i < ast.numSides + 1; i ++) 
             {
-                this.context.lineTo(asteroids[item].points[i][0] , asteroids[item].points[i][1]);
-            }
-            this.context.lineTo(asteroids[item].points[0][0], asteroids[item].points[0][1]);
+                this.context.lineTo(ast.x + ast.size * 10 * Math.cos(i * 2 * Math.PI / ast.numSides), ast.y + ast.size * 10 * Math.sin(i * 2 * Math.PI / ast.numSides));
+            };
             this.context.stroke();
             this.context.setTransform(1, 0, 0, 1, 0, 0);
         }

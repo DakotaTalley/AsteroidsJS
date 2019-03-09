@@ -47,8 +47,8 @@ function gameTick() {
     }
 
     // Asteroid Spawning
-    if (asteroids.length < 5 && frame % 30 == 0) {
-        asteroids.push(new Asteroid(0, 100, 0, -1, shpSize));
+    if (asteroids.length < 1 && frame % 30 == 0) {
+        asteroids.push(new Asteroid(0, 0, 0, 2, shpSize, 6));
     }
 
 
@@ -85,7 +85,7 @@ function queueTick() {
 function redrawCanvas() {
     canvas.setBackground("#000000");
     canvas.drawSpaceship("#FFFFFF", spaceship.x, spaceship.y, spaceship.orientation);
-    canvas.drawAsteroid(asteroids);
+    canvas.drawAsteroids(asteroids);
     canvas.drawEntities(entities);
 }
 

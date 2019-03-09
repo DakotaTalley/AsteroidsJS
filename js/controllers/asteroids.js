@@ -39,7 +39,7 @@ function gameTick() {
     }
 
     if (keys[32]) {
-        if(entities.length < 7 && frame == 30) {
+        if(entities.length < 7 && frame % 15 == 0) {
             entities.push(spaceship.shoot());
         };
     }
@@ -54,6 +54,12 @@ function gameTick() {
     //asteroid.rotate(5);
 
     spaceship.updatePosition();
+
+    if(entities.length > 1) {
+        for (item in entities) {
+            entities[item].updatePosition();
+        }
+    }
 
     asteroid.updatePosition();
 

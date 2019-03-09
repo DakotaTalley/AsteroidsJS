@@ -5,10 +5,9 @@ class Spaceship extends Entity {
 
     shoot() {
         var deg = this.mathifyOrientation();
-        var jerk = 10;
-        var dx = Math.cos(deg) / jerk;
-        var dy = Math.sin(deg) / jerk;
+        var dx = Math.cos(deg) * 5;
+        var dy = Math.sin(deg) * -5;
 
-        return new Entity(this.x, this.y, 0, 0, 0, jerk);
+        return new Entity(this.x, this.y, dx, dy, 0);
     }
 }

@@ -67,6 +67,21 @@ function gameTick() {
         }
     }
 
+    // Check for Collisions
+    // Asteroids and Bullets
+    if (asteroids.length > 0) {
+        for (i = 0; i < asteroids.length; i++) {
+            for (j = 0; j < entities.length; j++) {
+                var isCollide = checkCollision(asteroids[i], entities[j]);
+                console.log(isCollide);
+                if (isCollide) {
+                    asteroids.splice(i, 1);
+                    entities.splice(j, 1);
+                }
+            }
+        }
+    }
+
     //asteroid.rotate(5);
 
     redrawCanvas();
@@ -87,6 +102,31 @@ function redrawCanvas() {
     canvas.drawSpaceship("#FFFFFF", spaceship.x, spaceship.y, spaceship.orientation);
     canvas.drawAsteroids(asteroids);
     canvas.drawEntities(entities);
+}
+
+function checkCollision(obj1, obj2) {
+    var shp1 = {x: obj1.x, y: obj1.y};
+    var shp2 = {x: obj2.x, y: obj2.y};
+
+    if (obj1 instanceof(Asteroid)) {
+        shp1.w, shp1.h = obj1.r * 2;
+    } else {
+        shp1.h = obj1.h;
+        shp1.w = obj1.w;
+    }
+
+    if (obj2 instanceof(Asteroid)) {
+        shp1.w, shp1.h = obj1.r * 2;
+    } else {
+        shp2.h = obj2.h;
+        shp2.w = obj2.w;
+    }
+
+    return ((((shp1.y + shp1.h / 2) < (shp2.y)) ||
+    (shp1.y > (shp2.y + shp2.h / 2))) ||
+    (((shp1.x + shp1.w / 2) < shp2.x) ||
+    (shp1.x > shp2.x + shp2.w / 2)))
+    
 }
 
 var GAME_FPS = 60;

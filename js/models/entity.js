@@ -8,7 +8,7 @@ class Entity {
         this.dy = dy;
         this.jerk = jerk;
         this.orientation = orientation;
-        this.points = [];
+        this.shape = 'square';
         this.color = "#000000";
     }
 

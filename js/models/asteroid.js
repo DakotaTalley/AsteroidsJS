@@ -4,6 +4,8 @@ class Asteroid extends Entity {
         
         this.size = size;
         this.numSides = numSides;
+        this.shape = 'circle';
+        this.r = 10 * size;
     }
 
 }

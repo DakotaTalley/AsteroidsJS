@@ -1,6 +1,8 @@
 class Spaceship extends Entity {
     constructor() {
         super(0, 0, 0, 0, 0, 10);
+        this.h = 20;
+        this.w = 12;
     }
 
     shoot() {

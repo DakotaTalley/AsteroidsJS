@@ -2,12 +2,12 @@ header {
     text-align: center;
 }
 
-#myCanvas {
+#game-canvas {
     display: block;
     border:1px solid #000000;
     background:#f1f1f1;
-    margin-left:auto;
-    margin-right:auto;
+    padding: 0;
+    margin:auto;
 }
 
 p {

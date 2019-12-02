@@ -123,7 +123,7 @@ function checkCollision(obj1, obj2) {
     }
 
     return ((((shp1.y + shp1.h / 2) < (shp2.y)) ||
-    (shp1.y > (shp2.y + shp2.h / 2))) ||
+    (shp1.y > (shp2.y + shp2.h / 2))) &&
     (((shp1.x + shp1.w / 2) < shp2.x) ||
     (shp1.x > shp2.x + shp2.w / 2)))
     

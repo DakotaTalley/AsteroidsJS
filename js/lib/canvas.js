@@ -3,6 +3,7 @@ function Canvas(id) {
     this.context = this.canvas.getContext('2d');
     this.width = this.canvas.width;
     this.height = this.canvas.height;
+    
 
     this.setBackground = function(color) {
         this.context.fillStyle = color;
@@ -54,5 +55,12 @@ function Canvas(id) {
             this.context.fill();
             this.context.setTransform(1, 0, 0, 1, 0, 0);
         }
+    }
+
+    this.drawScore = function(arr) {
+        this.context.font = "20px Arial";
+        this.context.fillStyle = "white";
+        this.context.textAlign = "center";
+        this.context.fillText(arr, this.width / 2, 20);
     }
 }

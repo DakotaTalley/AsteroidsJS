@@ -13,6 +13,8 @@ window.onkeydown = function(e) { keys[e.keyCode] = true; }
 var asteroids = [];
 var entities = [];
 
+var score = 0;
+
 function gameTick() {
     // Frame Counter
     if (frame <= GAME_FPS) {
@@ -77,11 +79,16 @@ function gameTick() {
                 if (isCollide) {
                     asteroids.splice(i, 1);
                     entities.splice(j, 1);
+                    score++;
                 }
             }
         }
     }
 
+    if (frame == 60) {
+        score++;
+    }
+    
     //asteroid.rotate(5);
 
     redrawCanvas();
@@ -102,6 +109,7 @@ function redrawCanvas() {
     canvas.drawSpaceship("#FFFFFF", spaceship.x, spaceship.y, spaceship.orientation);
     canvas.drawAsteroids(asteroids);
     canvas.drawEntities(entities);
+    canvas.drawScore(score);
 }
 
 function checkCollision(obj1, obj2) {

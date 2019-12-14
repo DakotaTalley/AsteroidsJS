@@ -4,8 +4,18 @@ class Asteroid extends Entity {
         
         this.size = size;
         this.numSides = numSides;
-        this.shape = 'circle';
-        this.r = 10 * size;
+        this.r = 10 * this.size;
     }
 
+    getBounds() {
+        var points = [];
+        for (i = 0; i < this.numSides + 1; i++) {
+            points.push({
+                x: this.r * Math.cos(i * 2 * Math.PI / this.numSides),
+                y: this.r * Math.sin(i * 2 * Math.PI / this.numSides)
+            })
+        }
+
+        return points;
+    }
 }

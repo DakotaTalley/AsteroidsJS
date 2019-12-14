@@ -71,26 +71,23 @@ function gameTick() {
 
     // Check for Collisions
     // Aseteroids and Ship
-/*     if (asteroids.length > 0) {
-        for (i = 0; i < asteroids.length; i++) {
-            
+    for (item in asteroids) {
+        if (spaceship.checkCollision(asteroids[item])) {
+            console.log("DEATH!!");
         }
-    } */
+    }
 
     // Asteroids and Bullets
-/*     if (asteroids.length > 0) {
+    for (item in bullets) {
         for (i = 0; i < asteroids.length; i++) {
-            for (j = 0; j < entities.length; j++) {
-                var isCollide = checkCollision(asteroids[i], entities[j]);
-                console.log(isCollide);
-                if (isCollide) {
-                    asteroids.splice(i, 1);
-                    entities.splice(j, 1);
-                    score++;
-                }
+            if (bullets[item].checkCollision(asteroids[i])) {
+                bullets.splice(item, 1);
+                asteroids.splice(i, 1);
+                score++;
+                console.log("HIT!!");
             }
         }
-    } */
+    }
 
     // Per second updates
     if (frame == 60) {

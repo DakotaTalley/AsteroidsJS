@@ -13,6 +13,10 @@ window.onkeydown = function(e) { keys[e.keyCode] = true; }
 var asteroids = [];
 var bullets = [];
 
+// Set up pew
+var sPew = new Sound("assets/Laser_Shoot.wav");
+var sBoom = new Sound("assets/Explosion.wav");
+
 var score = 0;
 
 function gameTick() {
@@ -45,6 +49,7 @@ function gameTick() {
     if (keys[32]) {
         if (frame % 15 == 0) {
             bullets.push(spaceship.shoot(frame));
+            sPew.play();
         };
     }
 
@@ -73,6 +78,7 @@ function gameTick() {
     // Aseteroids and Ship
     for (item in asteroids) {
         if (spaceship.checkCollision(asteroids[item])) {
+            sBoom.play();
             console.log("DEATH!!");
         }
     }
@@ -84,6 +90,7 @@ function gameTick() {
                 bullets.splice(item, 1);
                 asteroids.splice(i, 1);
                 score++;
+                sBoom.play();
                 console.log("HIT!!");
             }
         }

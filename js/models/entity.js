@@ -106,4 +106,18 @@ class Entity {
     rotate(amount) {
         this.orientation += amount;
     }
+
+    checkCollision(entity) {
+        var thisBounds = this.getBounds();
+
+        for (i = 0; i < thisBounds.length; i++) {
+            if (thisBounds[i].x > (entity.x - entity.w / 2) &&
+                thisBounds[i].x < (entity.x + entity.w / 2) &&
+                thisBounds[i].y > (entity.y - entity.h / 2) &&
+                thisBounds[i].y < (entity.y + entity.h / 2)) {
+                    return true;
+                }
+        }
+        return false;
+    }
 }

@@ -6,6 +6,14 @@ class Spaceship extends Entity {
         this.color = "#FFFFFF";
     }
 
+    reset(w, h) {
+        this.setX(w/2);
+        this.setY(h/2);
+        this.setO(0);
+        this.setDx(0);
+        this.setDy(0);
+    }
+
     shoot(frame) {
         var deg = this.mathifyOrientation();
         var dx = Math.cos(deg) * 5;

@@ -107,6 +107,8 @@ function gameTick() {
             if (lives > 0) {
                 spaceship.reset(width, height);
                 lives--;
+                asteroids = [];
+                bullets = [];
             } else {
                 newGame();
             }

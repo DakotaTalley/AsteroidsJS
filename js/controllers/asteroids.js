@@ -1,24 +1,32 @@
+// Set up scene
 var canvas = new Canvas("game-canvas");
 var width = canvas.width;
 var height = canvas.height;
 
+// Set up entities
 var spaceship = new Spaceship(width/2, height/2);
+var asteroids = [];
+var bullets = [];
 
-var frame = 1;
+// Set up sounds
+var sPew = new Sound("assets/Laser_Shoot.wav");
+var sBoom = new Sound("assets/Explosion.wav");
 
+// Set up input
 var keys = [];
 window.onkeyup = function(e) { keys[e.keyCode] = false; }
 window.onkeydown = function(e) { keys[e.keyCode] = true; }
 
-var asteroids = [];
-var bullets = [];
-
-// Set up pew
-var sPew = new Sound("assets/Laser_Shoot.wav");
-var sBoom = new Sound("assets/Explosion.wav");
-
+// Set up game variables
+var frame = 1;
 var score = 0;
+var GAME_FPS = 60;
+var msBetweenFrames = 1000 / GAME_FPS;
 
+// Start Game
+startGame();
+
+// Game Loop
 function gameTick() {
     // Frame Counter
     if (frame <= GAME_FPS) {
@@ -26,12 +34,17 @@ function gameTick() {
     } else {
         frame = 1;
     }
+    
+    // Per second score
+    if (frame == 60) {
+        score++;
+    }
 
-    // HANDLE ROTATION
+    // Check for input
+    // Rotation
     if(keys[37]) {
         spaceship.rotate(-5);
     }
-
     if(keys[39]) {
         spaceship.rotate(5);
     }
@@ -40,7 +53,6 @@ function gameTick() {
     if(keys[38]) {
         spaceship.accelerate();
     }
-
     if(keys[40]) {
         spaceship.decelerate();
     }
@@ -53,9 +65,11 @@ function gameTick() {
         };
     }
 
+    // Update Scene
     // Asteroid Spawning
     if (asteroids.length < 1 && frame % 30 == 0) {
         asteroids.push(new Asteroid(width/2+50, height/2+50, 0, 2, 1, 6));
+        console.log("New Asteroid", asteroids);
     }
 
 
@@ -84,36 +98,35 @@ function gameTick() {
     }
 
     // Asteroids and Bullets
-    for (item in bullets) {
-        for (i = 0; i < asteroids.length; i++) {
-            if (bullets[item].checkCollision(asteroids[i])) {
-                bullets.splice(item, 1);
-                asteroids.splice(i, 1);
-                score++;
+    for (i in bullets) {
+        for (j in asteroids) {
+            if (bullets[i].checkCollision(asteroids[j])) {
+                bullets.splice(i, 1);
+                asteroids.splice(j, 1);
+                score += 5;
                 sBoom.play();
-                console.log("HIT!!");
+                break;
             }
         }
     }
 
-    // Per second updates
-    if (frame == 60) {
-        score++;
-    }
-
+    // Draw Scene
     redrawCanvas();
 
-    setTimeout(gameTick, msBetweenFrames);
-}
-
-function startGame() {
+    // Wait for next frame
     queueTick();
 }
 
+// Run Game
+function startGame() {
+    queueTick();
+}
+// Wait for next frame
 function queueTick() {
     setTimeout(gameTick, msBetweenFrames);
 }
 
+// Draw Scene
 function redrawCanvas() {
     canvas.setBackground("#000000");
 
@@ -124,7 +137,6 @@ function redrawCanvas() {
     for (i = 0; i < asteroids.length; i ++) {
         canvas.drawAsteroids(asteroids[i], asteroids[i].getBounds());
     }
-    //canvas.drawAsteroids(asteroids);
 
     // Draw the bullets
     for (i = 0; i < bullets.length; i++) {
@@ -138,10 +150,3 @@ function redrawCanvas() {
     // Draw the score
     canvas.drawScore(score);
 }
-
-var GAME_FPS = 60;
-
-var msBetweenFrames = 1000 / GAME_FPS;
-
-
-startGame();

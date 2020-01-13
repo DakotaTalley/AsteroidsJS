@@ -68,7 +68,17 @@ function gameTick() {
     // Update Scene
     // Asteroid Spawning
     if (asteroids.length < 1 && frame % 30 == 0) {
-        asteroids.push(new Asteroid(width/2+50, height/2+50, 0, 2, 1, 6));
+        //asteroids.push(new Asteroid(width/2+50, height/2+50, 0, 2, 1, 6));
+        var spawnx = Math.random() * width;
+        var spawny = Math.random() * height;
+        var spawndx = Math.random() * 3;
+        var spawndy = Math.random() * 3;
+        var spawndx = Math.random() * 3; // 2 or 3
+        spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1; // negative 50% of the time
+        var spawndy = Math.random() * 3; //2 or 3
+        spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1; // negative 50% of the time
+        var newAsteroid = new Asteroid(spawnx, spawny, spawndx, spawndy, 1, 6);
+        asteroids.push(newAsteroid);
         console.log("New Asteroid", asteroids);
     }
 
@@ -93,6 +103,7 @@ function gameTick() {
     for (item in asteroids) {
         if (spaceship.checkCollision(asteroids[item])) {
             sBoom.play();
+            newGame();
             console.log("DEATH!!");
         }
     }
@@ -149,4 +160,10 @@ function redrawCanvas() {
 
     // Draw the score
     canvas.drawScore(score);
+}
+
+function newGame() {
+    spaceship.reset(width, height);
+    score = 0;
+    frame = 1;
 }

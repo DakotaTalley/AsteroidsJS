@@ -26,6 +26,18 @@ class Entity {
         this.y = y;
     }
 
+    setO(o) {
+        this.orientation = o;
+    }
+
+    setDx(dx) {
+        this.dx = dx;
+    }
+
+    setDy(dy) {
+        this.dy = dy;
+    }
+
     updatePosition(width, height) {
         this.x += this.dx;
         this.y += this.dy;

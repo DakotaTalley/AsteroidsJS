@@ -5,8 +5,8 @@ class Asteroid extends Entity {
         this.size = size;
         this.numSides = numSides;
         this.r = 10 * this.size;
-        this.h = this.r;
-        this.w = this.r;
+        this.h = this.r * 2;
+        this.w = this.r * 2;
     }
 
     getBounds() {

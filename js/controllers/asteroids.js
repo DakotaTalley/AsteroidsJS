@@ -5,8 +5,6 @@ var height = canvas.height;
 
 // Set up entities
 var spaceship = new Spaceship(width/2, height/2);
-var asteroids = [];
-var bullets = [];
 
 // Set up sounds
 var sPew = new Sound("assets/Laser_Shoot.wav");
@@ -18,12 +16,15 @@ window.onkeyup = function(e) { keys[e.keyCode] = false; }
 window.onkeydown = function(e) { keys[e.keyCode] = true; }
 
 // Set up game variables
-var frame = 1;
-var score = 0;
+var frame;
+var score;
+var lives;
+
 var GAME_FPS = 60;
 var msBetweenFrames = 1000 / GAME_FPS;
 
 // Start Game
+newGame();
 startGame();
 
 // Game Loop
@@ -103,7 +104,12 @@ function gameTick() {
     for (item in asteroids) {
         if (spaceship.checkCollision(asteroids[item])) {
             sBoom.play();
-            newGame();
+            if (lives > 0) {
+                spaceship.reset(width, height);
+                lives--;
+            } else {
+                newGame();
+            }
             console.log("DEATH!!");
         }
     }
@@ -137,6 +143,17 @@ function queueTick() {
     setTimeout(gameTick, msBetweenFrames);
 }
 
+function newGame() {
+    frame = 1;
+    score = 0;
+    lives = 3;
+
+    asteroids = [];
+    bullets = [];
+
+    spaceship.reset(width, height);
+}
+
 // Draw Scene
 function redrawCanvas() {
     canvas.setBackground("#000000");
@@ -160,10 +177,7 @@ function redrawCanvas() {
 
     // Draw the score
     canvas.drawScore(score);
-}
 
-function newGame() {
-    spaceship.reset(width, height);
-    score = 0;
-    frame = 1;
+    // Draw the lives
+    canvas.drawLives(lives, spaceship);
 }

@@ -16,6 +16,8 @@ window.onkeyup = function(e) { keys[e.keyCode] = false; }
 window.onkeydown = function(e) { keys[e.keyCode] = true; }
 
 // Set up game variables
+var paused = true;
+var message = "Press Enter to start";
 var frame;
 var score;
 var lives;
@@ -29,111 +31,129 @@ startGame();
 
 // Game Loop
 function gameTick() {
-    // Frame Counter
-    if (frame <= GAME_FPS) {
-        frame += 1;
-    } else {
-        frame = 1;
-    }
-    
-    // Per second score
-    if (frame == 60) {
-        score++;
-    }
-
-    // Check for input
-    // Rotation
-    if(keys[37]) {
-        spaceship.rotate(-5);
-    }
-    if(keys[39]) {
-        spaceship.rotate(5);
-    }
-
-    // Acceleration / Deceleration
-    if(keys[38]) {
-        spaceship.accelerate();
-    }
-    if(keys[40]) {
-        spaceship.decelerate();
-    }
-
-    // Shooting
-    if (keys[32]) {
-        if (frame % 15 == 0) {
-            bullets.push(spaceship.shoot(frame));
-            sPew.play();
-        };
-    }
-
-    // Update Scene
-    // Asteroid Spawning
-    if (asteroids.length < 1 && frame % 30 == 0) {
-        //asteroids.push(new Asteroid(width/2+50, height/2+50, 0, 2, 1, 6));
-        var spawnx = Math.random() * width;
-        var spawny = Math.random() * height;
-        var spawndx = Math.random() * 3;
-        var spawndy = Math.random() * 3;
-        var spawndx = Math.random() * 3; // 2 or 3
-        spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1; // negative 50% of the time
-        var spawndy = Math.random() * 3; //2 or 3
-        spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1; // negative 50% of the time
-        var newAsteroid = new Asteroid(spawnx, spawny, spawndx, spawndy, 1, 6);
-        asteroids.push(newAsteroid);
-        console.log("New Asteroid", asteroids);
-    }
-
-
-    // Update Positions
-    spaceship.updatePosition(width, height);
-
-    if(bullets.length > 0) {
-        for (item in bullets) {
-            bullets[item].updatePosition(width, height);
+    if (!paused) {
+        // Frame Counter
+        if (frame <= GAME_FPS) {
+            frame += 1;
+        } else {
+            frame = 1;
         }
-    }
+        
+        // Per second score
+        if (frame == 60) {
+            score++;
+        }
 
-    if(asteroids.length > 0) {
+        // Check for input
+        // Rotation
+        if(keys[37]) {
+            spaceship.rotate(-5);
+        }
+        if(keys[39]) {
+            spaceship.rotate(5);
+        }
+
+        // Acceleration / Deceleration
+        if(keys[38]) {
+            spaceship.accelerate();
+        }
+        if(keys[40]) {
+            spaceship.decelerate();
+        }
+
+        // Pause
+        if(keys[13]) {
+            paused = !paused;
+        }
+
+        // Shooting
+        if (keys[32]) {
+            if (frame % 15 == 0) {
+                bullets.push(spaceship.shoot(frame));
+                sPew.play();
+            };
+        }
+
+        // Update Scene
+        // Asteroid Spawning
+        if (asteroids.length < 1 && frame % 30 == 0) {
+            var spawnx = Math.random() * width;
+            var spawny = Math.random() * height;
+            var spawndx = Math.random() * 3;
+            var spawndy = Math.random() * 3;
+            var spawndx = Math.random() * 3; // 2 or 3
+            spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1; // negative 50% of the time
+            var spawndy = Math.random() * 3; //2 or 3
+            spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1; // negative 50% of the time
+            var newAsteroid = new Asteroid(spawnx, spawny, spawndx, spawndy, 1, 6);
+            asteroids.push(newAsteroid);
+            console.log("New Asteroid", asteroids);
+        }
+
+
+        // Update Positions
+        spaceship.updatePosition(width, height);
+
+        if(bullets.length > 0) {
+            for (item in bullets) {
+                bullets[item].updatePosition(width, height);
+            }
+        }
+
+        if(asteroids.length > 0) {
+            for (item in asteroids) {
+                asteroids[item].updatePosition(width, height);
+            }
+        }
+
+        // Check for Collisions
+        // Aseteroids and Ship
         for (item in asteroids) {
-            asteroids[item].updatePosition(width, height);
-        }
-    }
-
-    // Check for Collisions
-    // Aseteroids and Ship
-    for (item in asteroids) {
-        if (spaceship.checkCollision(asteroids[item])) {
-            sBoom.play();
-            if (lives > 0) {
-                spaceship.reset(width, height);
-                lives--;
-                asteroids = [];
-                bullets = [];
-            } else {
-                newGame();
-            }
-            console.log("DEATH!!");
-        }
-    }
-
-    // Asteroids and Bullets
-    for (i in bullets) {
-        for (j in asteroids) {
-            if (bullets[i].checkCollision(asteroids[j])) {
-                bullets.splice(i, 1);
-                asteroids.splice(j, 1);
-                score += 5;
+            if (spaceship.checkCollision(asteroids[item])) {
                 sBoom.play();
-                break;
+                if (lives > 0) {
+                    spaceship.reset(width, height);
+                    lives--;
+                    asteroids = [];
+                    bullets = [];
+                } else {
+                    message = "Game Over. Press Enter for new game.";
+                    newGame();
+                }
+                console.log("DEATH!!");
             }
         }
+
+        // Asteroids and Bullets
+        for (i in bullets) {
+            for (j in asteroids) {
+                if (bullets[i].checkCollision(asteroids[j])) {
+                    bullets.splice(i, 1);
+                    asteroids.splice(j, 1);
+                    score += 5;
+                    sBoom.play();
+                    break;
+                }
+            }
+        }
+
+        // Draw Scene
+        redrawCanvas();
+
+        // Wait for next frame
+        queueTick();
+
+    } else {
+        if (keys[13]) {
+            paused = !paused;
+            message = "Paused";
+        }
+
+        drawMessage();
+
+        // Wait for next frame
+        queueTick();
     }
-
-    // Draw Scene
-    redrawCanvas();
-
-    // Wait for next frame
-    queueTick();
 }
 
 // Run Game
@@ -142,13 +162,15 @@ function startGame() {
 }
 // Wait for next frame
 function queueTick() {
-    setTimeout(gameTick, msBetweenFrames);
+    //setTimeout(gameTick, msBetweenFrames);
+    requestAnimationFrame(gameTick);
 }
 
 function newGame() {
     frame = 1;
     score = 0;
     lives = 3;
+    paused = true;
 
     asteroids = [];
     bullets = [];
@@ -182,4 +204,13 @@ function redrawCanvas() {
 
     // Draw the lives
     canvas.drawLives(lives, spaceship);
+}
+
+// Draw Message
+function drawMessage() {
+    canvas.setBackground("#000000");
+    canvas.drawScore(score);
+    canvas.drawLives(lives, spaceship);
+
+    canvas.drawPaused(message);
 }

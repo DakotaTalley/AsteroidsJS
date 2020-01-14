@@ -81,4 +81,11 @@ function Canvas(id) {
             xLoc += spaceship.w * 2;
         }
     }
+
+    this.drawPaused = function(message) {
+        this.context.font = "20px Arial";
+        this.context.fillStyle = "white";
+        this.context.textAlign = "center";
+        this.context.fillText(message, this.width / 2, this.height / 2);
+    }
 }

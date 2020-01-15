@@ -77,7 +77,7 @@ function gameTick() {
 
         // Update Scene
         // Asteroid Spawning
-        if (asteroids.length < 1 && frame % 30 == 0) {
+        if (asteroids.length < 2 && frame % 30 == 0) {
             var sIndex = Math.floor(Math.random() * 4);
             switch (SPAWNS[sIndex]) {
                 case "TOP":
@@ -131,8 +131,8 @@ function gameTick() {
 
         // Check for Collisions
         // Aseteroids and Ship
-        for (item in asteroids) {
-            if (spaceship.checkCollision(asteroids[item])) {
+        for (let i = 0; i < asteroids.length; i++) {
+            if (spaceship.checkCollision(asteroids[i])) {
                 sBoom.play();
                 if (lives > 0) {
                     spaceship.reset(width, height);
@@ -148,8 +148,8 @@ function gameTick() {
         }
 
         // Asteroids and Bullets
-        for (i in bullets) {
-            for (j in asteroids) {
+        for (let i = 0; i < bullets.length; i++) {
+            for (let j = 0; j < asteroids.length; j++) {
                 if (bullets[i].checkCollision(asteroids[j])) {
                     bullets.splice(i, 1);
                     asteroids.splice(j, 1);
@@ -209,12 +209,12 @@ function redrawCanvas() {
     canvas.drawSpaceship(spaceship);
 
     // Draw the asteroids
-    for (i = 0; i < asteroids.length; i ++) {
+    for (let i = 0; i < asteroids.length; i ++) {
         canvas.drawAsteroids(asteroids[i], asteroids[i].getBounds());
     }
 
     // Draw the bullets
-    for (i = 0; i < bullets.length; i++) {
+    for (let i = 0; i < bullets.length; i++) {
         if (!bullets[i].checkDistance(frame)) {
             canvas.drawBullets(bullets[i]);
         } else {

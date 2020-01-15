@@ -16,6 +16,7 @@ window.onkeyup = function(e) { keys[e.keyCode] = false; }
 window.onkeydown = function(e) { keys[e.keyCode] = true; }
 
 // Set up game variables
+const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
 var paused = true;
 var message = "Press Enter to start";
 var frame;
@@ -77,15 +78,37 @@ function gameTick() {
         // Update Scene
         // Asteroid Spawning
         if (asteroids.length < 1 && frame % 30 == 0) {
-            var spawnx = Math.random() * width;
-            var spawny = Math.random() * height;
-            var spawndx = Math.random() * 3;
-            var spawndy = Math.random() * 3;
-            var spawndx = Math.random() * 3; // 2 or 3
-            spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1; // negative 50% of the time
-            var spawndy = Math.random() * 3; //2 or 3
-            spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1; // negative 50% of the time
-            var newAsteroid = new Asteroid(spawnx, spawny, spawndx, spawndy, 1, 6);
+            var sIndex = Math.floor(Math.random() * 4);
+            switch (SPAWNS[sIndex]) {
+                case "TOP":
+                    var spawnx = Math.random() * width;
+                    var spawndx = Math.random() * 3;
+                    var spawndy = Math.random() * 3;
+                    spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+                    var newAsteroid = new Asteroid(spawnx, 0, spawndx, spawndy, 1, 6);
+                    break;
+                case "RIGHT":
+                    var spawny = Math.random() * height;
+                    var spawndx = Math.random() * -3;
+                    var spawndy = Math.random() * 3;
+                    spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+                    var newAsteroid = new Asteroid(width, spawny, spawndx, spawndy, 1, 6);
+                    break;
+                case "BOTTOM":
+                    var spawnx = Math.random() * width;
+                    var spawndx = Math.random() * 3;
+                    var spawndy = Math.random() * -3;
+                    spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+                    var newAsteroid = new Asteroid(spawnx, height, spawndx, spawndy, 1, 6);
+                    break;
+                case "LEFT":
+                    var spawny = Math.random() * height;
+                    var spawndx = Math.random() * 3;
+                    var spawndy = Math.random() * 3;
+                    spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+                    var newAsteroid = new Asteroid(0, spawny, spawndx, spawndy, 1, 6);
+                    break;
+            }
             asteroids.push(newAsteroid);
             console.log("New Asteroid", asteroids);
         }

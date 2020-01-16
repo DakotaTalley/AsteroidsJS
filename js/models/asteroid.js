@@ -20,4 +20,16 @@ class Asteroid extends Entity {
 
         return points;
     }
+
+    split() {
+        if (this.size - 1 == 0) {
+            return 0;
+        } else {
+            var newSize = this.size - 1;
+            var newA1 = new Asteroid(this.x, this.y, this.dx, this.dy - 1, newSize, this.numSides);
+            var newA2 = new Asteroid(this.x, this.y, this.dx, this.dy + 1, newSize, this.numSides);
+
+            return [newA1, newA2];
+        }
+    }
 }

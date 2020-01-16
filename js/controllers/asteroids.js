@@ -79,7 +79,7 @@ function gameTick() {
         // Asteroid Spawning
         if (asteroids.length < 5 && frame % 30 == 0) {
             var sIndex = Math.floor(Math.random() * 4);
-            var aSize = Math.floor(Math.random() * 4);
+            var aSize = Math.floor(Math.random() * 3 + 1);
             switch (SPAWNS[sIndex]) {
                 case "TOP":
                     var spawnx = Math.random() * width;
@@ -217,7 +217,7 @@ function redrawCanvas() {
     canvas.drawSpaceship(spaceship);
 
     // Draw the asteroids
-    for (let i = 0; i < asteroids.length; i ++) {
+    for (let i = 0; i < asteroids.length; i++) {
         canvas.drawAsteroids(asteroids[i], asteroids[i].getBounds());
     }
 

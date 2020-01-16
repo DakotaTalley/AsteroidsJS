@@ -19,6 +19,7 @@ window.onkeydown = function(e) { keys[e.keyCode] = true; }
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
 var paused = true;
 var message = "Press Enter to start";
+var difficulty;
 var frame;
 var score;
 var lives;
@@ -77,7 +78,7 @@ function gameTick() {
 
         // Update Scene
         // Asteroid Spawning
-        if (asteroids.length < 5 && frame % 30 == 0) {
+        if (asteroids.length < 3 * difficulty && frame % 30 == 0) {
             var sIndex = Math.floor(Math.random() * 4);
             var aSize = Math.floor(Math.random() * 3 + 1);
             switch (SPAWNS[sIndex]) {
@@ -161,7 +162,7 @@ function gameTick() {
                         asteroids.push(newA[1]);
                         asteroids.splice(j, 1);
                     }
-                    score += 5;
+                    score += 5 * difficulty;
                     sBoom.play();
                     break;
                 }
@@ -201,6 +202,7 @@ function newGame() {
     frame = 1;
     score = 0;
     lives = 3;
+    difficulty = 2;
     paused = true;
 
     asteroids = [];

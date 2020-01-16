@@ -77,36 +77,37 @@ function gameTick() {
 
         // Update Scene
         // Asteroid Spawning
-        if (asteroids.length < 2 && frame % 30 == 0) {
+        if (asteroids.length < 5 && frame % 30 == 0) {
             var sIndex = Math.floor(Math.random() * 4);
+            var aSize = Math.floor(Math.random() * 4);
             switch (SPAWNS[sIndex]) {
                 case "TOP":
                     var spawnx = Math.random() * width;
                     var spawndx = Math.random() * 3;
                     var spawndy = Math.random() * 3;
                     spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-                    var newAsteroid = new Asteroid(spawnx, 0, spawndx, spawndy, 1, 6);
+                    var newAsteroid = new Asteroid(spawnx, 0, spawndx, spawndy, aSize, 6);
                     break;
                 case "RIGHT":
                     var spawny = Math.random() * height;
                     var spawndx = Math.random() * -3;
                     var spawndy = Math.random() * 3;
                     spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-                    var newAsteroid = new Asteroid(width, spawny, spawndx, spawndy, 1, 6);
+                    var newAsteroid = new Asteroid(width, spawny, spawndx, spawndy, aSize, 6);
                     break;
                 case "BOTTOM":
                     var spawnx = Math.random() * width;
                     var spawndx = Math.random() * 3;
                     var spawndy = Math.random() * -3;
                     spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-                    var newAsteroid = new Asteroid(spawnx, height, spawndx, spawndy, 1, 6);
+                    var newAsteroid = new Asteroid(spawnx, height, spawndx, spawndy, aSize, 6);
                     break;
                 case "LEFT":
                     var spawny = Math.random() * height;
                     var spawndx = Math.random() * 3;
                     var spawndy = Math.random() * 3;
                     spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-                    var newAsteroid = new Asteroid(0, spawny, spawndx, spawndy, 1, 6);
+                    var newAsteroid = new Asteroid(0, spawny, spawndx, spawndy, aSize, 6);
                     break;
             }
             asteroids.push(newAsteroid);
@@ -152,7 +153,14 @@ function gameTick() {
             for (let j = 0; j < asteroids.length; j++) {
                 if (bullets[i].checkCollision(asteroids[j])) {
                     bullets.splice(i, 1);
-                    asteroids.splice(j, 1);
+                    newA = asteroids[j].split()
+                    if (newA == 0) {
+                        asteroids.splice(j, 1);
+                    } else {
+                        asteroids.push(newA[0]);
+                        asteroids.push(newA[1]);
+                        asteroids.splice(j, 1);
+                    }
                     score += 5;
                     sBoom.play();
                     break;

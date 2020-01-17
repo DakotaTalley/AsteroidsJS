@@ -4,21 +4,37 @@ class Asteroid extends Entity {
         
         this.size = size;
         this.numSides = numSides;
-        this.r = 10 * this.size;
-        this.h = this.r * 2;
-        this.w = this.r * 2;
+        this.r = 5 * this.size;
+        this.maxR = 0; 
+        this.bounds = this.genBounds();
+        this.h = this.maxR * 2; 
+        this.w = this.maxR * 2;
+
+    }
+
+    genBounds() {
+        var points = [];
+        for (i = 0; i < this.numSides; i++) {
+            var randR = (Math.random() * this.r) + this.r;
+            this.checkMaxR(randR);
+            points.push({
+                x: randR * Math.cos(i * 2 * Math.PI / this.numSides),
+                y: randR * Math.sin(i * 2 * Math.PI / this.numSides)
+            })
+        }
+        points.push(points[0]);
+
+        return points;
     }
 
     getBounds() {
-        var points = [];
-        for (i = 0; i < this.numSides + 1; i++) {
-            points.push({
-                x: this.r * Math.cos(i * 2 * Math.PI / this.numSides),
-                y: this.r * Math.sin(i * 2 * Math.PI / this.numSides)
-            })
-        }
+        return this.bounds;
+    }
 
-        return points;
+    checkMaxR(r) {
+        if (r > this.maxR) {
+            this.maxR = r;
+        }
     }
 
     split() {

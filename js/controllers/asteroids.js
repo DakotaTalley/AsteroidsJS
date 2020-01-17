@@ -67,8 +67,7 @@ function gameTick() {
 
         // Pause
         if(pframe && (keys["Enter"] || keys["KeyP"])) {
-            paused = !paused;
-            pframe = false;
+            pauseGame(true);
         }
 
         // Shooting
@@ -82,40 +81,7 @@ function gameTick() {
         // Update Scene
         // Asteroid Spawning
         if (asteroids.length < 3 * difficulty && frame % 30 == 0) {
-            var sIndex = Math.floor(Math.random() * 4);
-            var aSize = Math.floor(Math.random() * 3 + 1);
-            switch (SPAWNS[sIndex]) {
-                case "TOP":
-                    var spawnx = Math.random() * width;
-                    var spawndx = Math.random() * 3;
-                    var spawndy = Math.random() * 3;
-                    spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-                    var newAsteroid = new Asteroid(spawnx, 0, spawndx, spawndy, aSize, 6);
-                    break;
-                case "RIGHT":
-                    var spawny = Math.random() * height;
-                    var spawndx = Math.random() * -3;
-                    var spawndy = Math.random() * 3;
-                    spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-                    var newAsteroid = new Asteroid(width, spawny, spawndx, spawndy, aSize, 6);
-                    break;
-                case "BOTTOM":
-                    var spawnx = Math.random() * width;
-                    var spawndx = Math.random() * 3;
-                    var spawndy = Math.random() * -3;
-                    spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-                    var newAsteroid = new Asteroid(spawnx, height, spawndx, spawndy, aSize, 6);
-                    break;
-                case "LEFT":
-                    var spawny = Math.random() * height;
-                    var spawndx = Math.random() * 3;
-                    var spawndy = Math.random() * 3;
-                    spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
-                    var newAsteroid = new Asteroid(0, spawny, spawndx, spawndy, aSize, 6);
-                    break;
-            }
-            asteroids.push(newAsteroid);
-            console.log("New Asteroid", asteroids);
+            spawnAsteroid();
         }
 
 
@@ -140,10 +106,7 @@ function gameTick() {
             if (spaceship.checkCollision(asteroids[i])) {
                 sBoom.play();
                 if (lives > 0) {
-                    spaceship.reset(width, height);
-                    lives--;
-                    asteroids = [];
-                    bullets = [];
+                    newLife();
                 } else {
                     message = "Game Over. Press Enter for new game.";
                     newGame();
@@ -180,9 +143,7 @@ function gameTick() {
 
     } else {
         if (pframe && (keys["Enter"] || keys["KeyP"])) {
-            paused = !paused;
-            message = "Paused";
-            pframe = false;
+            pauseGame(false);
         }
 
         drawMessage();
@@ -213,6 +174,65 @@ function newGame() {
     bullets = [];
 
     spaceship.reset(width, height);
+}
+
+function newLife() {
+    spaceship.reset(width, height);
+    lives--;
+    asteroids = [];
+    bullets = [];
+}
+
+function pauseGame(bool) {
+    if (bool) {
+        paused = !paused;
+        pframe = false;
+    } else {
+        paused = !paused;
+        message = "Paused";
+        pframe = false;
+    }
+}
+
+function spawnAsteroid() {
+    var sIndex = Math.floor(Math.random() * 4);
+    var aSize = Math.floor(Math.random() * 3 + 1);
+    switch (SPAWNS[sIndex]) {
+        case "TOP":
+            var spawnx = Math.random() * width;
+            var spawndx = Math.random() * 3;
+            var spawndy = Math.random() * 3;
+            spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+            var newAsteroid = new Asteroid(spawnx, 0, spawndx, spawndy, aSize, 6);
+            break;
+        case "RIGHT":
+            var spawny = Math.random() * height;
+            var spawndx = Math.random() * -3;
+            var spawndy = Math.random() * 3;
+            spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+            var newAsteroid = new Asteroid(width, spawny, spawndx, spawndy, aSize, 6);
+            break;
+        case "BOTTOM":
+            var spawnx = Math.random() * width;
+            var spawndx = Math.random() * 3;
+            var spawndy = Math.random() * -3;
+            spawndx *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+            var newAsteroid = new Asteroid(spawnx, height, spawndx, spawndy, aSize, 6);
+            break;
+        case "LEFT":
+            var spawny = Math.random() * height;
+            var spawndx = Math.random() * 3;
+            var spawndy = Math.random() * 3;
+            spawndy *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+            var newAsteroid = new Asteroid(0, spawny, spawndx, spawndy, aSize, 6);
+            break;
+    }
+    asteroids.push(newAsteroid);
+    console.log("New Asteroid", asteroids);
+}
+
+function randASize() {
+    
 }
 
 // Draw Scene

@@ -82,7 +82,7 @@ function gameTick() {
 
         // Update Scene
         // Asteroid Spawning
-        if (asteroids.length < 3 * difficulty && frame % 30 == 0) {
+        if (asteroids.length < Math.log(score) && frame % 30 == 0) {
             spawnAsteroid();
         }
 
@@ -125,12 +125,12 @@ function gameTick() {
                     newA = asteroids[j].split()
                     if (newA == 0) {
                         asteroids.splice(j, 1);
+                        score += difficulty;
                     } else {
                         asteroids.push(newA[0]);
                         asteroids.push(newA[1]);
                         asteroids.splice(j, 1);
                     }
-                    score += 5 * difficulty;
                     sBoom.play();
                     break;
                 }
@@ -173,7 +173,7 @@ function newGame() {
     frame = 1;
     score = 0;
     lives = 3;
-    difficulty = 2;
+    difficulty = 1;
     paused = true;
 
     asteroids = [];

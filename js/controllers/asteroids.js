@@ -2,6 +2,9 @@
 var canvas = new Canvas("game-canvas");
 var width = canvas.width;
 var height = canvas.height;
+if(!localStorage.getItem('high')) {
+    localStorage.setItem('high', 0);
+}
 
 // Set up entities
 var spaceship = new Spaceship(width/2, height/2);
@@ -34,7 +37,6 @@ startGame();
 
 // Game Loop
 function gameTick() {
-    console.log(pframe);
     if (!paused) {
         // Frame Counter
         if (frame <= GAME_FPS) {
@@ -135,6 +137,10 @@ function gameTick() {
             }
         }
 
+        if (localStorage.getItem('high') < score) {
+            localStorage.setItem('high', score);
+        }
+
         // Draw Scene
         redrawCanvas();
 
@@ -232,7 +238,7 @@ function spawnAsteroid() {
 }
 
 function randASize() {
-    
+
 }
 
 // Draw Scene
@@ -258,6 +264,9 @@ function redrawCanvas() {
 
     // Draw the score
     canvas.drawScore(score);
+
+    // Draw the High Score
+    canvas.drawHigh(localStorage.getItem('high'));
 
     // Draw the lives
     canvas.drawLives(lives, spaceship);

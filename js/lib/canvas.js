@@ -65,6 +65,13 @@ function Canvas(id) {
         this.context.fillText(score, this.width / 2, 20);
     }
 
+    this.drawHigh = function(score) {
+        this.context.font = "20px Arial";
+        this.context.fillStyle = "white";
+        this.context.textAlign = "right";
+        this.context.fillText(score, this.width - 5, 20);
+    }
+
     this.drawLives = function(lives, spaceship) {
         var xLoc = spaceship.w;
 

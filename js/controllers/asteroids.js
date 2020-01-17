@@ -12,12 +12,13 @@ var sBoom = new Sound("assets/Explosion.wav");
 
 // Set up input
 var keys = [];
-window.onkeyup = function(e) { keys[e.code] = false; }
+window.onkeyup = function(e) { keys[e.code] = false; pframe = true;}
 window.onkeydown = function(e) { keys[e.code] = true; }
 
 // Set up game variables
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
 var paused = true;
+var pframe = true;
 var message = "Press Enter to start";
 var difficulty;
 var frame;
@@ -33,6 +34,7 @@ startGame();
 
 // Game Loop
 function gameTick() {
+    console.log(pframe);
     if (!paused) {
         // Frame Counter
         if (frame <= GAME_FPS) {
@@ -64,12 +66,13 @@ function gameTick() {
         }
 
         // Pause
-        if(keys["Enter"] || keys["KeyP"]) {
+        if(pframe && (keys["Enter"] || keys["KeyP"])) {
             paused = !paused;
+            pframe = false;
         }
 
         // Shooting
-        if (keys[""]) {
+        if (keys["Space"]) {
             if (frame % 15 == 0) {
                 bullets.push(spaceship.shoot(frame));
                 sPew.play();
@@ -176,9 +179,10 @@ function gameTick() {
         queueTick();
 
     } else {
-        if (keys["Enter"] || keys["KeyP"]) {
+        if (pframe && (keys["Enter"] || keys["KeyP"])) {
             paused = !paused;
             message = "Paused";
+            pframe = false;
         }
 
         drawMessage();

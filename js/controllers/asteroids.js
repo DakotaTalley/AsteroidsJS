@@ -12,8 +12,8 @@ var sBoom = new Sound("assets/Explosion.wav");
 
 // Set up input
 var keys = [];
-window.onkeyup = function(e) { keys[e.keyCode] = false; }
-window.onkeydown = function(e) { keys[e.keyCode] = true; }
+window.onkeyup = function(e) { keys[e.code] = false; }
+window.onkeydown = function(e) { keys[e.code] = true; }
 
 // Set up game variables
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
@@ -48,28 +48,28 @@ function gameTick() {
 
         // Check for input
         // Rotation
-        if(keys[37]) {
+        if(keys["KeyA"] || keys["ArrowLeft"]) {
             spaceship.rotate(-5);
         }
-        if(keys[39]) {
+        if(keys["KeyD"] || keys["ArrowRight"]) {
             spaceship.rotate(5);
         }
 
         // Acceleration / Deceleration
-        if(keys[38]) {
+        if(keys["KeyW"] || keys["ArrowUp"]) {
             spaceship.accelerate();
         }
-        if(keys[40]) {
+        if(keys["KeyS"] || keys["ArrowDown"]) {
             spaceship.decelerate();
         }
 
         // Pause
-        if(keys[13]) {
+        if(keys["Enter"] || keys["KeyP"]) {
             paused = !paused;
         }
 
         // Shooting
-        if (keys[32]) {
+        if (keys[""]) {
             if (frame % 15 == 0) {
                 bullets.push(spaceship.shoot(frame));
                 sPew.play();
@@ -176,7 +176,7 @@ function gameTick() {
         queueTick();
 
     } else {
-        if (keys[13]) {
+        if (keys["Enter"] || keys["KeyP"]) {
             paused = !paused;
             message = "Paused";
         }

@@ -23,7 +23,7 @@ const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
 var paused = true;
 var pframe = true;
 var message = "Press Enter to start";
-var difficulty;
+var difficulty = new Difficulty();
 var frame;
 var score;
 var lives;
@@ -32,7 +32,7 @@ var GAME_FPS = 60;
 var msBetweenFrames = 1000 / GAME_FPS;
 
 // Start Game
-newGame();
+reset();
 startGame();
 
 // Game Loop
@@ -111,7 +111,7 @@ function gameTick() {
                     newLife();
                 } else {
                     message = "Game Over. Press Enter for new game.";
-                    newGame();
+                    reset();
                 }
                 console.log("DEATH!!");
             }
@@ -125,7 +125,7 @@ function gameTick() {
                     newA = asteroids[j].split()
                     if (newA == 0) {
                         asteroids.splice(j, 1);
-                        score += difficulty;
+                        score += difficulty.getDiff();
                     } else {
                         asteroids.push(newA[0]);
                         asteroids.push(newA[1]);
@@ -169,10 +169,10 @@ function queueTick() {
     requestAnimationFrame(gameTick);
 }
 
-function newGame() {
+function reset() {
     frame = 1;
     score = 0;
-    lives = 3;
+    lives = 2;
     difficulty = 1;
     paused = true;
 
@@ -180,6 +180,9 @@ function newGame() {
     bullets = [];
 
     spaceship.reset(width, height);
+
+    drawMessage();
+    chooseDiff();
 }
 
 function newLife() {
@@ -237,10 +240,6 @@ function spawnAsteroid() {
     console.log("New Asteroid", asteroids);
 }
 
-function randASize() {
-
-}
-
 // Draw Scene
 function redrawCanvas() {
     canvas.setBackground("#000000");
@@ -272,10 +271,27 @@ function redrawCanvas() {
     canvas.drawLives(lives, spaceship);
 }
 
+function chooseDiff() {
+    if(keys["KeyD"] || keys["ArrowRight"]) {
+        difficulty.increaseDiff();
+    }
+    if(keys["KeyA"] || keys["ArrowLeft"]) {
+        difficulty.decreaseDiff();
+    }
+
+    var selectText = "Choose Difficulty:";
+    var eText = "Easy";
+    var nText = "Normal";
+    var hText = "Hard";
+
+    //canvas.drawDiff(difficulty.getDiff());
+}
+
 // Draw Message
 function drawMessage() {
     canvas.setBackground("#000000");
     canvas.drawScore(score);
+    canvas.drawHigh(localStorage.getItem('high'));
     canvas.drawLives(lives, spaceship);
 
     canvas.drawPaused(message);

@@ -95,4 +95,29 @@ function Canvas(id) {
         this.context.textAlign = "center";
         this.context.fillText(message, this.width / 2, this.height / 2);
     }
+
+    this.drawDiff = function(diff) {
+        console.log(diff);
+        if (diff = 1) {
+            this.context.font = "bold 20px Arial";
+            console.log(1);
+        } else {
+            this.context.font = "20px Arial";
+        }
+        this.context.fillStyle = "white";
+        this.context.textAlign = "center";
+        this.context.fillText("Easy", this.width / 3, this.height / 2 + 30);
+        if (diff = 2) {
+            this.context.font = "bold 20px Arial";
+        } else {
+            this.context.font = "20px Arial";
+        }
+        this.context.fillText("Normal", this.width / 2, this.height / 2 + 30);
+        if (diff = 3) {
+            this.context.font = "bold 20px Arial";
+        } else {
+            this.context.font = "20px Arial";
+        }
+        this.context.fillText("Hard", this.width * 2 / 3, this.height / 2 + 30);
+    }
 }

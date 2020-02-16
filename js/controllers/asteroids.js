@@ -10,8 +10,8 @@ if(!localStorage.getItem('high')) {
 var spaceship = new Spaceship(width/2, height/2);
 
 // Set up sounds
-var sPew = new Sound("assets/Laser_Shoot.wav");
-var sBoom = new Sound("assets/Explosion.wav");
+var sPew = new Sound("assets/Laser_Shoot.wav", .1);
+var sBoom = new Sound("assets/Explosion.wav", .25);
 
 // Set up input
 var keys = [];
@@ -152,6 +152,11 @@ function gameTick() {
         if (localStorage.getItem('high') < score) {
             localStorage.setItem('high', score);
         }
+
+        // // New Life Check
+        // if (score % 200 == 1) {
+        //     lives++;
+        // }
 
         // Draw Scene
         redrawCanvas();

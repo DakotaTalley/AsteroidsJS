@@ -98,15 +98,25 @@ function Canvas(id) {
 
     this.drawDiff = function(diff) {
         console.log(diff);
-        var pos;
+        var xpos;
+        var rectW;
         if (diff == 1) {
-            pos = this.width / 3;
+            xpos = this.width / 3;
+            rectW = 60;
         } else if (diff ==2) {
-            pos = this.width / 2
+            xpos = this.width / 2 - 10;
+            rectW = 80;
         } else {
-            pos = this.width * 2 / 3;
+            xpos = this.width * 2 / 3;
+            rectW = 60;
         }
-        console.log(pos);
+        
+        this.context.beginPath();
+        this.context.strokeStyle = 'white';
+        this.context.lineWidth = 1.2;
+        this.context.rect(xpos - 30, this.height / 2 + 8, rectW, 30);
+        this.context.stroke(); 
+
         this.context.font = "20px Arial";
         this.context.fillStyle = "white";
         this.context.textAlign = "center";
@@ -114,17 +124,6 @@ function Canvas(id) {
         this.context.fillText("Normal", this.width / 2, this.height / 2 + 30);
         this.context.fillText("Hard", this.width * 2 / 3, this.height / 2 + 30);
 
-        this.context.setTransform(1, 0, 0, 1, 0, 0);
-
-        this.context.strokeStyle = '#FFFFFF';
-        this.context.lineWidth = 1;
-        this.context.translate(pos, this.height / 2 + 30);
-        this.context.beginPath();
-        this.context.moveTo(pos + 10, this.height / 2 + 10);
-        this.context.lineTo(pos - 10, this.height / 2 + 10);
-        this.context.lineTo(pos - 10, this.height / 2 - 10);
-        this.context.lineTo(pos + 10, this.height / 2 - 10);
-        this.context.stroke();
-        this.context.setTransform(1, 0, 0, 1, 0, 0);
+  
     }
 }

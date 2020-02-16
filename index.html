@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Asteriods v1.0 - GRX Games</title>
+        <title>Asteriods - GRX Games</title>
+        <link href="https://fonts.googleapis.com/css?family=Turret+Road&display=swap" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="style/Asteroids.css">
     </head>
     <body>
-        <header>AsteriodsJS v1.0</header>
-        <canvas id="game-canvas" width="800" height="600">
-            Please use a modern browser to access this website.
-        </canvas>
-        <p>Fight your way through an asteroid field!</p>
+        <div class="wrapper">
+            <header>
+                <h1>AsteriodsJS</h1>
+            </header>
+            <canvas id="game-canvas" width="800" height="600">
+                Please use a modern browser to access this website.
+            </canvas>
+            <div class="wrapper">
+                <p>Fight your way through an asteroid field!</p>
+                <button id="reset-high">Reset High Score</button>
+            </div>
+        </div>
         <script src="./js/lib/canvas.js"></script>
         <script src="./js/models/entity.js"></script>
         <script src="./js/models/bullet.js"></script>

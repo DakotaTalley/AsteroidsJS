@@ -52,14 +52,14 @@ function Canvas(id) {
     }
 
     this.drawScore = function(score) {
-        this.context.font = "20px Arial";
+        this.context.font = "20px Turret Road";
         this.context.fillStyle = "white";
         this.context.textAlign = "center";
         this.context.fillText(score, this.width / 2, 20);
     }
 
     this.drawHigh = function(score) {
-        this.context.font = "20px Arial";
+        this.context.font = "20px Turret Road";
         this.context.fillStyle = "white";
         this.context.textAlign = "right";
         this.context.fillText(score, this.width - 5, 20);
@@ -83,7 +83,7 @@ function Canvas(id) {
     }
 
     this.drawPaused = function(message) {
-        this.context.font = "20px Arial";
+        this.context.font = "20px Turret Road";
         this.context.fillStyle = "white";
         this.context.textAlign = "center";
         this.context.fillText(message, this.width / 2, this.height / 2);
@@ -109,7 +109,7 @@ function Canvas(id) {
         this.context.rect(xpos - 30, this.height / 2 + 8, rectW, 30);
         this.context.stroke(); 
 
-        this.context.font = "20px Arial";
+        this.context.font = "20px Turret Road";
         this.context.fillStyle = "white";
         this.context.textAlign = "center";
         this.context.fillText("Easy", this.width / 3, this.height / 2 + 30);

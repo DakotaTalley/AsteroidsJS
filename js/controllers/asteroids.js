@@ -6,6 +6,10 @@ if(!localStorage.getItem('high')) {
     localStorage.setItem('high', 0);
 }
 
+// Reset High Score Button
+const rButton = document.getElementById('reset-high');
+rButton.addEventListener('click', function(e) { localStorage.setItem('high', 0); });
+
 // Set up entities
 var spaceship = new Spaceship(width/2, height/2);
 

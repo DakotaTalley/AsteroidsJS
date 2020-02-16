@@ -27,7 +27,7 @@ const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
 var paused = true;
 var newGame = true;
 var pframe = true;
-var message = "Press Enter to choose your Difficulty.";
+var message = "Choose your Difficulty.";
 var difficulty = new Difficulty();
 var frame;
 var score = 0;
@@ -127,7 +127,7 @@ function gameTick() {
                 if (lives > 0) {
                     newLife();
                 } else {
-                    message = "Game Over. Press Enter for new game.";
+                    message = "Game Over. Choose your Difficulty for new game.";
                     newGame = true;
                     reset();
                 }
@@ -193,7 +193,6 @@ function queueTick() {
 
 function reset() {
     frame = 1;
-    //score = 0;
     lives = 2;
     paused = true;
 
@@ -299,10 +298,11 @@ function chooseDiff() {
         pframe = false;
     }
 
-    if(pframe && (keys["Enter"])) {
+    if(pframe && (keys["Enter"] || keys["Space"])) {
         newGame = !newGame;
         score = 0;
         reset();
+        pauseGame(false);
     }
 
     canvas.drawDiff(difficulty.getDiff());

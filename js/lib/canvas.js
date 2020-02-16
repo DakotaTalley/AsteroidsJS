@@ -34,13 +34,6 @@ function Canvas(id) {
         {
             this.context.lineTo(bounds[i].x, bounds[i].y);
         };
-        /* this.context.moveTo(ast.r * Math.cos(0 * 2 * Math.PI / ast.numSides), ast.r * Math.sin(0 * 2 * Math.PI / ast.numSides));
-        for (var i = 1; i < ast.numSides + 1; i ++) 
-        {
-            var x = ast.r * Math.cos(i * 2 * Math.PI / ast.numSides);
-            var y = ast.r * Math.sin(i * 2 * Math.PI / ast.numSides);
-            this.context.lineTo(x, y);
-        }; */
         this.context.stroke();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
@@ -97,7 +90,6 @@ function Canvas(id) {
     }
 
     this.drawDiff = function(diff) {
-        console.log(diff);
         var xpos;
         var rectW;
         if (diff == 1) {

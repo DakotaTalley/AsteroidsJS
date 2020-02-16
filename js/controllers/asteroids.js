@@ -43,9 +43,6 @@ function gameTick() {
 
         chooseDiff();
 
-        // Draw Scene
-        //redrawCanvas();
-
         // Wait for next frame
         queueTick();
     } else if (!paused) {
@@ -130,7 +127,6 @@ function gameTick() {
                     newGame = true;
                     reset();
                 }
-                console.log("DEATH!!");
             }
         }
 
@@ -255,7 +251,6 @@ function spawnAsteroid() {
             break;
     }
     asteroids.push(newAsteroid);
-    console.log("New Asteroid", asteroids);
 }
 
 // Draw Scene
@@ -305,11 +300,6 @@ function chooseDiff() {
         score = 0;
         reset();
     }
-
-    var selectText = "Choose Difficulty:";
-    var eText = "Easy";
-    var nText = "Normal";
-    var hText = "Hard";
 
     canvas.drawDiff(difficulty.getDiff());
 }

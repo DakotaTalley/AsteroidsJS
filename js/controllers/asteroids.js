@@ -61,6 +61,11 @@ function gameTick() {
             score++;
         }
 
+        // New Life Check
+        if (score % 50 == 0 && frame == 60) {
+            lives++;
+        }
+
         // Check for input
         // Rotation
         if(keys["KeyA"] || keys["ArrowLeft"]) {
@@ -138,6 +143,11 @@ function gameTick() {
                     if (newA == 0) {
                         asteroids.splice(j, 1);
                         score += difficulty.getDiff();
+
+                        // New Life Check
+                        if (score % 150 <= (difficulty.getDiff() - 1)) {
+                            lives++;
+                        }
                     } else {
                         asteroids.push(newA[0]);
                         asteroids.push(newA[1]);
@@ -152,11 +162,6 @@ function gameTick() {
         if (localStorage.getItem('high') < score) {
             localStorage.setItem('high', score);
         }
-
-        // // New Life Check
-        // if (score % 200 == 1) {
-        //     lives++;
-        // }
 
         // Draw Scene
         redrawCanvas();

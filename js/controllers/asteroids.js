@@ -21,11 +21,12 @@ window.onkeydown = function(e) { keys[e.code] = true; }
 // Set up game variables
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
 var paused = true;
+var newGame = true;
 var pframe = true;
-var message = "Press Enter to start";
+var message = "Press Enter to choose your Difficulty.";
 var difficulty = new Difficulty();
 var frame;
-var score;
+var score = 0;
 var lives;
 
 var GAME_FPS = 60;
@@ -37,7 +38,17 @@ startGame();
 
 // Game Loop
 function gameTick() {
-    if (!paused) {
+    if (newGame) {
+        drawMessage();
+
+        chooseDiff();
+
+        // Draw Scene
+        //redrawCanvas();
+
+        // Wait for next frame
+        queueTick();
+    } else if (!paused) {
         // Frame Counter
         if (frame <= GAME_FPS) {
             frame += 1;
@@ -111,6 +122,7 @@ function gameTick() {
                     newLife();
                 } else {
                     message = "Game Over. Press Enter for new game.";
+                    newGame = true;
                     reset();
                 }
                 console.log("DEATH!!");
@@ -171,18 +183,14 @@ function queueTick() {
 
 function reset() {
     frame = 1;
-    score = 0;
+    //score = 0;
     lives = 2;
-    difficulty = 1;
     paused = true;
 
     asteroids = [];
     bullets = [];
 
     spaceship.reset(width, height);
-
-    drawMessage();
-    chooseDiff();
 }
 
 function newLife() {
@@ -272,11 +280,20 @@ function redrawCanvas() {
 }
 
 function chooseDiff() {
-    if(keys["KeyD"] || keys["ArrowRight"]) {
+    if((pframe && keys["KeyD"]) || (pframe && keys["ArrowRight"])) {
         difficulty.increaseDiff();
+        pframe = false;
     }
-    if(keys["KeyA"] || keys["ArrowLeft"]) {
+
+    if((pframe && keys["KeyA"]) || (pframe && keys["ArrowLeft"])) {
         difficulty.decreaseDiff();
+        pframe = false;
+    }
+
+    if(pframe && (keys["Enter"])) {
+        newGame = !newGame;
+        score = 0;
+        reset();
     }
 
     var selectText = "Choose Difficulty:";
@@ -284,7 +301,7 @@ function chooseDiff() {
     var nText = "Normal";
     var hText = "Hard";
 
-    //canvas.drawDiff(difficulty.getDiff());
+    canvas.drawDiff(difficulty.getDiff());
 }
 
 // Draw Message

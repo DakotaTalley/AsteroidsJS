@@ -5,7 +5,7 @@ class Difficulty {
     }
 
     increaseDiff() {
-        if (this.diff = this.arr[2]) {
+        if (this.diff == this.arr[2]) {
             return;
         } else {
             this.diff++;
@@ -13,7 +13,7 @@ class Difficulty {
     }
 
     decreaseDiff() {
-        if(this.diff = this.arr[0]) {
+        if(this.diff == this.arr[0]) {
             return;
         } else {
             this.diff--;

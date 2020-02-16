@@ -98,26 +98,33 @@ function Canvas(id) {
 
     this.drawDiff = function(diff) {
         console.log(diff);
-        if (diff = 1) {
-            this.context.font = "bold 20px Arial";
-            console.log(1);
+        var pos;
+        if (diff == 1) {
+            pos = this.width / 3;
+        } else if (diff ==2) {
+            pos = this.width / 2
         } else {
-            this.context.font = "20px Arial";
+            pos = this.width * 2 / 3;
         }
+        console.log(pos);
+        this.context.font = "20px Arial";
         this.context.fillStyle = "white";
         this.context.textAlign = "center";
         this.context.fillText("Easy", this.width / 3, this.height / 2 + 30);
-        if (diff = 2) {
-            this.context.font = "bold 20px Arial";
-        } else {
-            this.context.font = "20px Arial";
-        }
         this.context.fillText("Normal", this.width / 2, this.height / 2 + 30);
-        if (diff = 3) {
-            this.context.font = "bold 20px Arial";
-        } else {
-            this.context.font = "20px Arial";
-        }
         this.context.fillText("Hard", this.width * 2 / 3, this.height / 2 + 30);
+
+        this.context.setTransform(1, 0, 0, 1, 0, 0);
+
+        this.context.strokeStyle = '#FFFFFF';
+        this.context.lineWidth = 1;
+        this.context.translate(pos, this.height / 2 + 30);
+        this.context.beginPath();
+        this.context.moveTo(pos + 10, this.height / 2 + 10);
+        this.context.lineTo(pos - 10, this.height / 2 + 10);
+        this.context.lineTo(pos - 10, this.height / 2 - 10);
+        this.context.lineTo(pos + 10, this.height / 2 - 10);
+        this.context.stroke();
+        this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
 }

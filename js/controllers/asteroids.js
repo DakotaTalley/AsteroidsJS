@@ -22,8 +22,15 @@ let sBoom = new Sound("assets/Explosion.wav", .25)
 // Set up input
 let keys = []
 
-window.onkeyup = function(e) { keys[e.code] = false; pframe = true;}
-window.onkeydown = function(e) { keys[e.code] = true; }
+window.onkeyup = (e) => { 
+    keys[e.code] = false 
+    pframe = true
+}
+
+window.onkeydown = (e) => { 
+    keys[e.code] = true
+    e.preventDefault()
+ }
 
 // Set up game variables
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"]

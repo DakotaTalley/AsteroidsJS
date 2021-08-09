@@ -4,6 +4,7 @@ class Spaceship extends Entity {
         this.h = 20;
         this.w = 12;
         this.color = "#FFFFFF";
+        this.timeLastShoot = 0
     }
 
     reset(w, h) {
@@ -16,8 +17,8 @@ class Spaceship extends Entity {
 
     shoot(frame) {
         var deg = this.mathifyOrientation();
-        var dx = Math.cos(deg) * 5;
-        var dy = Math.sin(deg) * -5;
+        var dx = Math.cos(deg) * .5;
+        var dy = Math.sin(deg) * -.5;
 
         return new Bullet(this.x, this.y, dx, dy, frame);
     }

@@ -7,7 +7,7 @@ class Entity {
         this.jerk = jerk;
         this.orientation = orientation;
         this.color = "#000000";
-        this.maxD = 5;
+        this.maxD = .5;
     }
 
     getX() {
@@ -38,9 +38,9 @@ class Entity {
         this.dy = dy;
     }
 
-    updatePosition(width, height) {
-        this.x += this.dx;
-        this.y += this.dy;
+    updatePosition(width, height, dt) {
+        this.x += this.dx * dt;
+        this.y += this.dy * dt;
 
         if (this.x < 0) {
             this.setX(width);
@@ -57,10 +57,10 @@ class Entity {
         }
     }
 
-    accelerate() {
+    accelerate(dt) {
         var deg = this.mathifyOrientation();
-        this.dx += Math.cos(deg) / this.jerk;
-        this.dy -= Math.sin(deg) / this.jerk;
+        this.dx += (Math.cos(deg) / this.jerk) * dt;
+        this.dy -= (Math.sin(deg) / this.jerk) * dt;
 
         // Max Speed Check
         if (this.dx > this.maxD) {
@@ -77,10 +77,10 @@ class Entity {
         }
     }
 
-    decelerate() {
+    decelerate(dt) {
         var deg = this.mathifyOrientation();
-        this.dx -= Math.cos(deg) / this.jerk;
-        this.dy += Math.sin(deg) / this.jerk;
+        this.dx -= (Math.cos(deg) / this.jerk) * dt;
+        this.dy += (Math.sin(deg) / this.jerk) * dt;
 
         // Max Speed Check
         if (this.dx > this.maxD) {

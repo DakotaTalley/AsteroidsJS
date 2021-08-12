@@ -391,7 +391,3 @@ let drawMessage = () => {
 
     canvas.drawPaused(message)
 }
-
-// Start Game
-reset()
-startGame()

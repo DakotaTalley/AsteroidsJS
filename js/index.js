@@ -1,0 +1,3 @@
+// Start Game
+reset()
+startGame()

@@ -1,3 +1,6 @@
+import Entity from '../models/entity';
+import Bullet from '../models/bullet';
+
 class Spaceship extends Entity {
     constructor(x, y) {
         super(x, y, 0, 0, 0, 10);
@@ -41,3 +44,5 @@ class Spaceship extends Entity {
 
 
 }
+
+export default Spaceship;

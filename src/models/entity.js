@@ -121,3 +121,5 @@ class Entity {
         return false;
     }
 }
+
+export default Entity;

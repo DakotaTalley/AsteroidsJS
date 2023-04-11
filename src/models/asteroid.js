@@ -1,3 +1,5 @@
+import Entity from './entity';
+
 class Asteroid extends Entity {
     constructor(x, y, dx, dy, size, numSides) {
         super(x, y, dx, dy, 0, 10);
@@ -14,7 +16,7 @@ class Asteroid extends Entity {
 
     genBounds() {
         var points = [];
-        for (i = 0; i < this.numSides; i++) {
+        for (let i = 0; i < this.numSides; i++) {
             var randR = (Math.random() * this.r) + this.r;
             this.checkMaxR(randR);
             points.push({
@@ -49,3 +51,5 @@ class Asteroid extends Entity {
         }
     }
 }
+
+export default Asteroid;

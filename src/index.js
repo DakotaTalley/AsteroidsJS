@@ -1,4 +1,11 @@
+import Canvas from './lib/canvas';
+import Spaceship from './models/spaceship';
+import Asteroid from './models/asteroid';
+import Sound from './models/sound';
+import Difficulty from './models/difficulty';
+
 // Set up scene
+console.log('loading scene...');
 let canvas = new Canvas("game-canvas")
 let width = canvas.width
 let height = canvas.height
@@ -13,7 +20,9 @@ const rButton = document.getElementById('reset-high')
 rButton.addEventListener('click', function(e) { localStorage.setItem('high', 0); })
 
 // Set up entities
-let spaceship = new Spaceship(width/2, height/2)
+let spaceship = new Spaceship(width/2, height/2);
+let asteroids = [];
+let bullets = [];
 
 // Set up sounds
 let sPew = new Sound("assets/Laser_Shoot.wav", .1)
@@ -199,15 +208,21 @@ let updatePhysics = () => {
     spaceship.updatePosition(width, height, dt)
 
     if (bullets.length > 0) {
-        for (item in bullets) {
+        bullets.forEach((bullet) => {
+            bullet.updatePosition(width, height, dt)
+        });
+/*         for (item in bullets) {
             bullets[item].updatePosition(width, height, dt)
-        }
+        } */
     }
 
     if (asteroids.length > 0) {
-        for (item in asteroids) {
+        asteroids.forEach((asteroid) => {
+            asteroid.updatePosition(width, height, dt)
+        });
+/*         for (item in asteroids) {
             asteroids[item].updatePosition(width, height, dt)
-        }
+        } */
         //console.log(asteroids[0])
     }
     //
@@ -233,7 +248,7 @@ let updatePhysics = () => {
         for (let j = 0; j < asteroids.length; j++) {
             if (bullets[i].checkCollision(asteroids[j])) {
                 bullets.splice(i, 1)
-                newA = asteroids[j].split()
+                let newA = asteroids[j].split()
 
                 if (newA == 0) {
                     asteroids.splice(j, 1)
@@ -391,3 +406,6 @@ let drawMessage = () => {
 
     canvas.drawPaused(message)
 }
+
+reset();
+startGame();

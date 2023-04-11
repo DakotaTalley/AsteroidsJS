@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AsteriodsJS</title>
+        <meta property="og:title" content="AsteroidsJS">
+        <meta property="og:url" content="https://jdtalley.github.io/AsteroidsJS/">
+        <meta property="og:description" content="AsteroidsJS is an Asteroids clone written in JavaScript. It utilizes Canvas API for drawing the game objects.">
+        <meta property="og:image" content="https://raw.githubusercontent.com/JDTalley/AsteroidsJS/master/img/ajsgif1.gif">
+        <meta property="og:type" content="game">
+        <link href="https://fonts.googleapis.com/css?family=Turret+Road&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="style/Asteroids.css">
+    </head>
+    <body>
+        <div class="wrapper">
+            <header>
+                <h1>AsteriodsJS</h1>
+            </header>
+            <canvas id="game-canvas" width="800" height="600">
+                Canvas required to run AsteroidsJS. Please use a modern browser to access this website.
+            </canvas>
+            <div class="wrapper">
+                <h3>Fight your way through an asteroid field!</h3>
+                <p>Use the Arrow Keys or WASD to move your ship.</p>
+                <p>Up/Down to accelerate/deccelerate. Left/Right to rotate.</p>
+                <p>Space to shoot. Enter/P to Pause. Enter/Space to confirm.</p>
+                <button id="reset-high">Reset High Score</button>
+            </div>
+        </div>
+        <script src="./runtime.bundle.js"></script>
+        <script src="./index.bundle.js"></script>
+    </body>
+</html>

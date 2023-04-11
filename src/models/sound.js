@@ -16,3 +16,5 @@ class Sound {
         this.sound.pause();
       }
 }
+
+export default Sound;

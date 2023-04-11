@@ -25,3 +25,5 @@ class Difficulty {
     }
     
 }
+
+export default Difficulty;

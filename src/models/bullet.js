@@ -1,3 +1,5 @@
+import Entity from './entity';
+
 class Bullet extends Entity {
     constructor(x, y, dx, dy, frame) {
         super(x, y, dx, dy, 0, 0);
@@ -39,3 +41,5 @@ class Bullet extends Entity {
         }
     }
 }
+
+export default Bullet;

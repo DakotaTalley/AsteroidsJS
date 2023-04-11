@@ -30,7 +30,7 @@ function Canvas(id) {
         this.context.translate(ast.x, ast.y);
         this.context.beginPath();
         this.context.moveTo(bounds[0].x, bounds[0].y);
-        for (var i = 1; i < ast.numSides + 1; i ++) 
+        for (let i = 1; i < ast.numSides + 1; i ++) 
         {
             this.context.lineTo(bounds[i].x, bounds[i].y);
         };
@@ -68,7 +68,7 @@ function Canvas(id) {
     this.drawLives = function(lives, spaceship) {
         var xLoc = spaceship.w;
 
-        for (i = 0; i < lives; i++) {
+        for (let i = 0; i < lives; i++) {
             this.context.fillStyle = spaceship.color;
             this.context.translate(xLoc, spaceship.h / 2 + 5);
             this.context.beginPath();
@@ -119,3 +119,5 @@ function Canvas(id) {
   
     }
 }
+
+export default Canvas;

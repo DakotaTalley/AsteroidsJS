@@ -7,32 +7,32 @@ project currently lacks entirely.
 
 ## Phases
 
-1. [Build Tooling Migration (webpack → Vite)](repo-modernization/phase-1-dependency-toolchain.md) —
-   replace webpack/webpack-cli/webpack-dev-server/webpack-merge with Vite,
-   clearing the 31 known `npm audit` vulnerabilities (2 critical, 14 high) at
-   the root rather than patching them, and along the way stop
-   hand-maintaining `dist/index.html`/CSS/assets alongside generated bundles
-   so `npm run build` fully reproduces the deployable site from source; also
-   bumps `gh-pages`/`prettier` past their major-version gaps.
-2. [Dead Code Removal & Consolidation](repo-modernization/phase-2-dead-code-removal.md) —
-   delete the unused, broken `src/controllers/asteroids.js` duplicate and the
-   never-wired, syntactically-broken `src/lib/GameLib/` scaffold;
-   `src/index.js` is the only real entry point.
-3. [Bug Fixes in Live Game Code](repo-modernization/phase-3-bug-fixes.md) —
-   fix array-mutation-during-iteration bugs in the bullet/collision loops, the
-   rapid-fire audio replay bug, and other correctness issues in the code that
-   actually ships.
-4. [Security & Repo Hygiene](repo-modernization/phase-4-build-security-hygiene.md) —
-   add CI plus baseline web hardening (CSP, font hosting), building on the
-   root `index.html`/`public/` layout Phase 1 already establishes.
-5. [Performance](repo-modernization/phase-5-performance.md) — cache the
-   per-frame `localStorage` high-score reads, apply the project's own canvas
-   devicePixelRatio rule, and (as a research-only sub-section of this same
-   phase) evaluate whether WASM is worth adopting for collision/physics
-   math.
-6. [Developer Tooling & Testing](repo-modernization/phase-6-tooling-testing.md) —
-   add ESLint, replace the always-failing `npm test` stub with real unit
-   tests for the pure-logic model classes, and wire lint/test into CI.
+- [x] [Build Tooling Migration (webpack → Vite)](repo-modernization/phase-1-dependency-toolchain.md) —
+      replace webpack/webpack-cli/webpack-dev-server/webpack-merge with Vite,
+      clearing the 31 known `npm audit` vulnerabilities (2 critical, 14 high) at
+      the root rather than patching them, and along the way stop
+      hand-maintaining `dist/index.html`/CSS/assets alongside generated bundles
+      so `npm run build` fully reproduces the deployable site from source; also
+      bumps `gh-pages`/`prettier` past their major-version gaps.
+- [ ] [Dead Code Removal & Consolidation](repo-modernization/phase-2-dead-code-removal.md) —
+      delete the unused, broken `src/controllers/asteroids.js` duplicate and the
+      never-wired, syntactically-broken `src/lib/GameLib/` scaffold;
+      `src/index.js` is the only real entry point.
+- [ ] [Bug Fixes in Live Game Code](repo-modernization/phase-3-bug-fixes.md) —
+      fix array-mutation-during-iteration bugs in the bullet/collision loops, the
+      rapid-fire audio replay bug, and other correctness issues in the code that
+      actually ships.
+- [ ] [Security & Repo Hygiene](repo-modernization/phase-4-build-security-hygiene.md) —
+      add CI plus baseline web hardening (CSP, font hosting), building on the
+      root `index.html`/`public/` layout Phase 1 already establishes.
+- [ ] [Performance](repo-modernization/phase-5-performance.md) — cache the
+      per-frame `localStorage` high-score reads, apply the project's own canvas
+      devicePixelRatio rule, and (as a research-only sub-section of this same
+      phase) evaluate whether WASM is worth adopting for collision/physics
+      math.
+- [ ] [Developer Tooling & Testing](repo-modernization/phase-6-tooling-testing.md) —
+      add ESLint, replace the always-failing `npm test` stub with real unit
+      tests for the pure-logic model classes, and wire lint/test into CI.
 
 Phases 1–2 are prerequisites for everything after them (clean, deduplicated
 code on current tooling). Phases 3–6 can proceed in any order, in parallel,

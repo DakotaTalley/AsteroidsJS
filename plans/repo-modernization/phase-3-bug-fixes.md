@@ -44,6 +44,19 @@ the code that ships, not the dead trees removed in
       assignment (`src/index.js`) with
       `window.addEventListener("keyup"/"keydown", ...)` so a future second
       listener doesn't silently clobber this one.
+- [ ] Fix the missed-keypress bug in pause/confirm handling (`src/index.js`):
+      `checkInput`'s pause check (`keys["Enter"] || keys["KeyP"]`) and
+      `chooseDiff`'s confirm check (`keys["Enter"] || keys["Space"]`) only see
+      a key as pressed if it's still down the one time per animation frame
+      `gameTick` happens to read `keys[...]` — a keydown+keyup pair completing
+      faster than that frame (observed with Playwright's `.press()`, which
+      fires both within the same tick, during [Phase
+      1](phase-1-dependency-toolchain.md)'s post-migration smoke test) is
+      silently dropped, so pause or the difficulty-confirm can fail to
+      trigger with no feedback. Latch the transition on `keydown` (e.g. track
+      a separate "pressed this frame" flag set in the `keydown` handler and
+      cleared after `gameTick` consumes it) instead of sampling the raw
+      held-state on every frame.
 - [ ] Guard the `Math.log(score)` asteroid-spawn threshold in `updatePhysics`
       (`src/index.js`) against `score === 0` (`Math.log(0) === -Infinity`).
       It happens to work today (the comparison is just always false, so

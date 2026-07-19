@@ -1,5 +1,7 @@
 # Phase 1: Build Tooling Migration (webpack → Vite)
 
+**Status: Complete** — all approach items below are done and verified.
+
 Part of [Repo Modernization](../repo-modernization.md).
 
 ## Context
@@ -48,17 +50,17 @@ version.
 
 ## Approach
 
-- [ ] Move `dist/index.html` to the project root, replace its two
+- [x] Move `dist/index.html` to the project root, replace its two
       `<script src="./*.bundle.js">` tags with a single
       `<script type="module" src="/src/index.js"></script>`.
-- [ ] Move `dist/style/Asteroids.css` → `public/style/Asteroids.css` and
+- [x] Move `dist/style/Asteroids.css` → `public/style/Asteroids.css` and
       `dist/assets/*.wav` → `public/assets/`; confirm the paths
       `src/models/sound.js` and the moved `index.html` reference still match.
-- [ ] Add `vite.config.js` with `base: '/AsteroidsJS/'` (required — this
+- [x] Add `vite.config.js` with `base: '/AsteroidsJS/'` (required — this
       deploys to `jdtalley.github.io/AsteroidsJS/`, a subpath, not a domain
       root). No other config should be needed.
-- [ ] Delete `webpack.common.js`, `webpack.dev.js`, `webpack.prod.js`.
-- [ ] Update `package.json`:
+- [x] Delete `webpack.common.js`, `webpack.dev.js`, `webpack.prod.js`.
+- [x] Update `package.json`:
   - Remove `webpack`, `webpack-cli`, `webpack-dev-server`, `webpack-merge`.
   - Add `vite` (latest).
   - Bump `gh-pages` 5 → 6, `prettier` 2.8.7 → 3.x (run
@@ -66,24 +68,31 @@ version.
     separately from any logic changes in other phases).
   - Scripts: `"start": "vite"`, `"build": "vite build"`, `"deploy": "npm run
     build && gh-pages -d dist"`. Drop `watch` (Vite's dev server replaces it).
-- [ ] Add `dist/` to `.gitignore` and `git rm -r --cached dist` — Vite fully
+- [x] Add `dist/` to `.gitignore` and `git rm -r --cached dist` — Vite fully
       regenerates `dist/` from `src/`/`public/`/root `index.html` on every
       build, so it no longer needs to be committed. `npm run deploy`
       (`gh-pages -d dist`) remains the actual publish path and already
       builds fresh before pushing to the `gh-pages` branch.
-- [ ] Run `npm run start` and confirm the dev server serves a working game
-      (movement, shooting, sound, collisions, pause).
-- [ ] Run `rm -rf dist && npm run build`, then serve `dist/` and confirm the
+- [x] Run `npm run start` and confirm the dev server serves a working game
+      (movement, shooting, sound, collisions, pause). Verified headlessly:
+      dev server returns 200 for index/JS/CSS/wav/font under the
+      `/AsteroidsJS/` base, and a scripted Chromium session confirmed actual
+      gameplay (rotation, thrust, shooting, asteroid spawn, pause) with no
+      console errors.
+- [x] Run `rm -rf dist && npm run build`, then serve `dist/` and confirm the
       production build is fully reproduced from source with no missing
-      HTML/CSS/audio.
-- [ ] Re-run `npm audit` and confirm 0 critical/high remain. Document any
+      HTML/CSS/audio. Verified via `vite preview`: `dist/` contained
+      index.html, the bundled JS, CSS, both `.wav` files, and the font, all
+      served with 200s.
+- [x] Re-run `npm audit` and confirm 0 critical/high remain. Document any
       remaining moderate/low findings that have no fix available yet rather
-      than silently ignoring them.
-- [ ] Add an `"engines"` field to `package.json` pinning the supported Node
+      than silently ignoring them. `npm audit` now reports **0
+      vulnerabilities** (down from 31) — nothing left to document.
+- [x] Add an `"engines"` field to `package.json` pinning the supported Node
       range, and add a matching `.nvmrc`.
-- [ ] Regenerate `package-lock.json` cleanly (`npm install`) and commit it
+- [x] Regenerate `package-lock.json` cleanly (`npm install`) and commit it
       alongside the dependency changes.
-- [ ] Update the README's build/dev/deploy instructions to match the new
+- [x] Update the README's build/dev/deploy instructions to match the new
       scripts if they reference webpack by name.
 
 ## Open Questions

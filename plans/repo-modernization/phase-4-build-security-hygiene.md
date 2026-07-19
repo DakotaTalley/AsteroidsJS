@@ -20,7 +20,7 @@ there's no CSP or other baseline web hardening on the served page, which
 loads a cross-origin Google Fonts stylesheet.
 
 Also separate from the gh-pages deploy (which always serves whatever's
-current on `master`): a tag-triggered release workflow that packages `dist/`
+current on `main`): a tag-triggered release workflow that packages `dist/`
 as a downloadable, versioned artifact attached to a GitHub Release. There's
 one existing tag (`v1.0`) but no process behind it — this only pays off once
 versioning/changelog discipline exists (see Open Questions).
@@ -64,7 +64,7 @@ versioning/changelog discipline exists (see Open Questions).
       `npm ci && npm run build`, zip `dist/`, and attach it to a GitHub
       Release (e.g. via `softprops/action-gh-release`). This is additive to
       the existing gh-pages deploy, not a replacement — gh-pages continues to
-      publish "current `master`"; this publishes an addressable, downloadable
+      publish "current `main`"; this publishes an addressable, downloadable
       snapshot per tag.
       - Before wiring this up, `package.json`'s `"version"` (currently frozen
         at `1.0.0` since the `v1.0` tag) needs to actually track releases,

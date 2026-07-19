@@ -74,6 +74,23 @@ class Spaceship extends Entity {
     };
     return [p0, p1, p2];
   }
+
+  // Drawing primitive for Canvas#drawEntity — a filled triangle in
+  // ship-local space, positioned/rotated by the Canvas at draw time.
+  getDrawShape() {
+    return {
+      mode: "fill",
+      color: this.color,
+      x: this.x,
+      y: this.y,
+      rotation: (this.orientation * Math.PI) / 180,
+      points: [
+        { x: 0, y: -this.h / 2 },
+        { x: -this.w / 2, y: this.h / 2 },
+        { x: this.w / 2, y: this.h / 2 },
+      ],
+    };
+  }
 }
 
 export default Spaceship;

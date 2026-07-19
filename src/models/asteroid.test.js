@@ -10,6 +10,20 @@ describe("Asteroid#genBounds", () => {
   });
 });
 
+describe("Asteroid#getDrawShape", () => {
+  it("returns a stroked polygon of localBounds at the asteroid's position", () => {
+    const a = new Asteroid(100, 100, 0.1, 0.1, 3, 8);
+    const shape = a.getDrawShape();
+
+    expect(shape.mode).toBe("stroke");
+    expect(shape.color).toBe(a.color);
+    expect(shape.lineWidth).toBe(1);
+    expect(shape.x).toBe(100);
+    expect(shape.y).toBe(100);
+    expect(shape.points).toBe(a.localBounds);
+  });
+});
+
 describe("Asteroid#split", () => {
   it("returns 0 when splitting a size-1 asteroid", () => {
     const a = new Asteroid(100, 100, 0.1, 0.1, 1, 8);

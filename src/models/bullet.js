@@ -32,6 +32,23 @@ class Bullet extends Entity {
     return [p0, p1, p2, p3];
   }
 
+  // Drawing primitive for Canvas#drawEntity — a filled rectangle in
+  // bullet-local space, translated by the Canvas at draw time.
+  getDrawShape() {
+    return {
+      mode: "fill",
+      color: this.color,
+      x: this.x,
+      y: this.y,
+      points: [
+        { x: -this.w / 2, y: -this.h / 2 },
+        { x: this.w / 2, y: -this.h / 2 },
+        { x: this.w / 2, y: this.h / 2 },
+        { x: -this.w / 2, y: this.h / 2 },
+      ],
+    };
+  }
+
   // Check distance travelled by frames since creation
   checkDistance(frame) {
     if (this.time < 2 && this.frame == frame) {

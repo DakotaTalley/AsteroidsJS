@@ -22,55 +22,40 @@ function Canvas(id) {
     this.context.fillRect(0, 0, this.width, this.height);
   };
 
-  this.drawSpaceship = function (spaceship) {
-    this.context.fillStyle = spaceship.color;
-    this.context.translate(spaceship.x, spaceship.y);
-    this.context.rotate((spaceship.orientation * Math.PI) / 180);
-    this.context.beginPath();
-    this.context.moveTo(0, -spaceship.h / 2);
-    this.context.lineTo(-spaceship.w / 2, spaceship.h / 2);
-    this.context.lineTo(spaceship.w / 2, spaceship.h / 2);
-    this.context.fill();
-    this.context.rotate((-spaceship.orientation * Math.PI) / 180);
-    this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
-  };
+  // Generic entity renderer — reads the drawing primitive returned by
+  // entity.getDrawShape() and issues the actual context calls, so adding a
+  // new entity type doesn't require a new Canvas draw method.
+  this.drawEntity = function (entity) {
+    const shape = entity.getDrawShape();
 
-  this.drawAsteroids = function (ast, bounds) {
-    this.context.strokeStyle = ast.color;
-    this.context.lineWidth = 1;
-    this.context.beginPath();
-    this.context.moveTo(bounds[0].x, bounds[0].y);
-    for (let i = 1; i < ast.numSides + 1; i++) {
-      this.context.lineTo(bounds[i].x, bounds[i].y);
+    this.context.translate(shape.x, shape.y);
+    if (shape.rotation) {
+      this.context.rotate(shape.rotation);
     }
-    this.context.stroke();
-  };
 
-  this.drawBullets = function (bul) {
-    this.context.fillStyle = bul.color;
-
-    this.context.translate(bul.x, bul.y);
     this.context.beginPath();
-    this.context.lineTo(-bul.w / 2, -bul.h / 2);
-    this.context.lineTo(bul.w / 2, -bul.h / 2);
-    this.context.lineTo(bul.w / 2, bul.h / 2);
-    this.context.lineTo(-bul.w / 2, bul.h / 2);
-    this.context.fill();
+    this.context.moveTo(shape.points[0].x, shape.points[0].y);
+    for (let i = 1; i < shape.points.length; i++) {
+      this.context.lineTo(shape.points[i].x, shape.points[i].y);
+    }
+
+    if (shape.mode === "stroke") {
+      this.context.strokeStyle = shape.color;
+      this.context.lineWidth = shape.lineWidth ?? 1;
+      this.context.stroke();
+    } else {
+      this.context.fillStyle = shape.color;
+      this.context.fill();
+    }
+
     this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
   };
 
-  this.drawScore = function (score) {
+  this.drawText = function (text, xLoc, yLoc, align) {
     this.context.font = "20px Turret Road";
     this.context.fillStyle = "white";
-    this.context.textAlign = "center";
-    this.context.fillText(score, this.width / 2, 20);
-  };
-
-  this.drawHigh = function (score) {
-    this.context.font = "20px Turret Road";
-    this.context.fillStyle = "white";
-    this.context.textAlign = "right";
-    this.context.fillText(score, this.width - 5, 20);
+    this.context.textAlign = align;
+    this.context.fillText(text, xLoc, yLoc);
   };
 
   this.drawLives = function (lives, spaceship) {
@@ -90,40 +75,14 @@ function Canvas(id) {
     }
   };
 
-  this.drawPaused = function (message) {
-    this.context.font = "20px Turret Road";
-    this.context.fillStyle = "white";
-    this.context.textAlign = "center";
-    this.context.fillText(message, this.width / 2, this.height / 2);
-  };
-
-  this.drawDiff = function (diff) {
-    var xpos;
-    var rectW;
-    if (diff == 1) {
-      xpos = this.width / 3;
-      rectW = 60;
-    } else if (diff == 2) {
-      xpos = this.width / 2 - 10;
-      rectW = 80;
-    } else {
-      xpos = (this.width * 2) / 3;
-      rectW = 60;
-    }
-
+  this.drawSelector = function (xpos, rectW) {
     this.context.beginPath();
     this.context.strokeStyle = "white";
     this.context.lineWidth = 1.2;
     this.context.rect(xpos - 30, this.height / 2 + 8, rectW, 30);
     this.context.stroke();
-
-    this.context.font = "20px Turret Road";
-    this.context.fillStyle = "white";
-    this.context.textAlign = "center";
-    this.context.fillText("Easy", this.width / 3, this.height / 2 + 30);
-    this.context.fillText("Normal", this.width / 2, this.height / 2 + 30);
-    this.context.fillText("Hard", (this.width * 2) / 3, this.height / 2 + 30);
   };
+
 }
 
 export default Canvas;

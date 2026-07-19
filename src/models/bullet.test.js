@@ -26,3 +26,21 @@ describe("Bullet#checkDistance", () => {
     expect(b.time).toBe(0);
   });
 });
+
+describe("Bullet#getDrawShape", () => {
+  it("returns a filled rectangle in bullet-local space at the bullet's position", () => {
+    const b = new Bullet(30, 40, 0, 0, 1);
+    const shape = b.getDrawShape();
+
+    expect(shape.mode).toBe("fill");
+    expect(shape.color).toBe(b.color);
+    expect(shape.x).toBe(30);
+    expect(shape.y).toBe(40);
+    expect(shape.points).toEqual([
+      { x: -2, y: -2 },
+      { x: 2, y: -2 },
+      { x: 2, y: 2 },
+      { x: -2, y: 2 },
+    ]);
+  });
+});

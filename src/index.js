@@ -355,28 +355,28 @@ const renderGraphics = () => {
   canvas.setBackground("#000000");
 
   // Draw the spaceship
-  canvas.drawSpaceship(spaceship);
+  canvas.drawEntity(spaceship);
 
   // Draw the asteroids
   asteroids.forEach((asteroid) => {
-    canvas.drawAsteroids(asteroid, asteroid.getBounds());
+    canvas.drawEntity(asteroid);
   });
 
   // Draw the bullets
   for (let i = bullets.length - 1; i >= 0; i--) {
     const bullet = bullets[i];
     if (!bullet.checkDistance(frame)) {
-      canvas.drawBullets(bullet);
+      canvas.drawEntity(bullet);
     } else {
       bullets.splice(i, 1);
     }
   }
 
   // Draw the score
-  canvas.drawScore(score);
+  canvas.drawText(score, canvas.width / 2, 20, "center");
 
   // Draw the High Score
-  canvas.drawHigh(highScore);
+  canvas.drawText(highScore, canvas.width - 5, 20, "right");
 
   // Draw the lives
   canvas.drawLives(lives, spaceship);
@@ -400,17 +400,34 @@ const chooseDiff = () => {
     pauseGame();
   }
 
-  canvas.drawDiff(difficulty.getDiff());
+  let xpos;
+  let rectW;
+  const diff = difficulty.getDiff();
+  if (diff == 1) {
+    xpos = canvas.width / 3;
+    rectW = 60;
+  } else if (diff == 2) {
+    xpos = canvas.width / 2 - 10;
+    rectW = 80;
+  } else {
+    xpos = (canvas.width * 2) / 3;
+    rectW = 60;
+  }
+
+  canvas.drawSelector(xpos, rectW);
+  canvas.drawText("Easy", canvas.width / 3, canvas.height / 2 + 30, "center");
+  canvas.drawText("Normal", canvas.width / 2, canvas.height / 2 + 30, "center");
+  canvas.drawText("Hard", (canvas.width * 2) / 3, canvas.height / 2 + 30, "center");
 };
 
 // Draw Message
 const drawMessage = () => {
   canvas.setBackground("#000000");
-  canvas.drawScore(score);
-  canvas.drawHigh(highScore);
+  canvas.drawText(score, canvas.width / 2, 20, "center");
+  canvas.drawText(highScore, canvas.width - 5, 20, "right");
   canvas.drawLives(lives, spaceship);
 
-  canvas.drawPaused(message);
+  canvas.drawText(message, canvas.width / 2, canvas.height / 2, "center");
 };
 
 reset();

@@ -121,3 +121,22 @@ describe("Spaceship#getBounds", () => {
     ]);
   });
 });
+
+describe("Spaceship#getDrawShape", () => {
+  it("returns a filled triangle positioned/rotated at the ship's current state", () => {
+    const s = new Spaceship(50, 60);
+    s.setO(90);
+    const shape = s.getDrawShape();
+
+    expect(shape.mode).toBe("fill");
+    expect(shape.color).toBe(s.color);
+    expect(shape.x).toBe(50);
+    expect(shape.y).toBe(60);
+    expect(shape.rotation).toBeCloseTo(Math.PI / 2);
+    expect(shape.points).toEqual([
+      { x: 0, y: -10 },
+      { x: -6, y: 10 },
+      { x: 6, y: 10 },
+    ]);
+  });
+});

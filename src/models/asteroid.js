@@ -39,6 +39,20 @@ class Asteroid extends Entity {
     }));
   }
 
+  // Drawing primitive for Canvas#drawEntity — a stroked polygon in
+  // asteroid-local space (localBounds already closes back to its first
+  // point), translated by the Canvas at draw time.
+  getDrawShape() {
+    return {
+      mode: "stroke",
+      color: this.color,
+      lineWidth: 1,
+      x: this.x,
+      y: this.y,
+      points: this.localBounds,
+    };
+  }
+
   checkMaxR(r) {
     if (r > this.maxR) {
       this.maxR = r;

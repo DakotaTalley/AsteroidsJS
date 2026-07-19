@@ -44,8 +44,21 @@ if (!localStorage.getItem("high")) {
 }
 
 const rButton = document.getElementById("reset-high");
-rButton.addEventListener("click", function (e) {
+const resetHighDialog = document.getElementById("reset-high-dialog");
+const resetHighConfirm = document.getElementById("reset-high-confirm");
+const resetHighCancel = document.getElementById("reset-high-cancel");
+
+rButton.addEventListener("click", () => {
+  resetHighDialog.showModal();
+});
+
+resetHighConfirm.addEventListener("click", () => {
   localStorage.setItem("high", 0);
+  resetHighDialog.close();
+});
+
+resetHighCancel.addEventListener("click", () => {
+  resetHighDialog.close();
 });
 
 // Set up scene

@@ -43,3 +43,22 @@ p {
 
 #reset-high {
 }
+
+#reset-high-dialog {
+  background: #111;
+  color: white;
+  border: 1px solid white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  font-family: "Turret Road", cursive;
+}
+
+#reset-high-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+#reset-high-dialog .dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}

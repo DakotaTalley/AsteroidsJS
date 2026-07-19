@@ -13,17 +13,21 @@ const dt = 0.01;
 let accumulator = 0;
 let timeLastPause = performance.now();
 //// Input
-let keys = [];
+let keys = {};
+// Latches a keydown edge for one gameTick, so a keydown+keyup pair that
+// completes faster than the animation frame still registers as a press.
+let pressed = {};
 
-window.onkeyup = (e) => {
+window.addEventListener("keyup", (e) => {
   keys[e.code] = false;
   pframe = true;
-};
+});
 
-window.onkeydown = (e) => {
+window.addEventListener("keydown", (e) => {
   keys[e.code] = true;
+  pressed[e.code] = true;
   e.preventDefault();
-};
+});
 //// Game Variables
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
 let paused = true;
@@ -84,8 +88,8 @@ const gameTick = () => {
   if (paused) {
     let now = performance.now();
 
-    if (now - timeLastPause > 1000 && (keys["Enter"] || keys["KeyP"])) {
-      pauseGame(paused);
+    if (now - timeLastPause > 1000 && (pressed["Enter"] || pressed["KeyP"])) {
+      pauseGame();
     }
 
     if (!newGame) {
@@ -117,6 +121,9 @@ const gameTick = () => {
 
     chooseDiff();
   }
+
+  // Clear this frame's latched keydown presses
+  pressed = {};
 
   // queue next gameTick
   queueTick();
@@ -171,11 +178,11 @@ const checkInput = () => {
   }
 
   // Pause
-  if (keys["Enter"] || keys["KeyP"]) {
+  if (pressed["Enter"] || pressed["KeyP"]) {
     let now = performance.now();
 
     if (now - timeLastPause > 2000) {
-      pauseGame(paused);
+      pauseGame();
     }
   }
 
@@ -194,7 +201,7 @@ const checkInput = () => {
 const updatePhysics = () => {
   // Update Scene
   // Asteroid Spawning
-  if (asteroids.length < Math.log(score) && frame % 30 == 0) {
+  if (asteroids.length < Math.log(score + 1) && frame % 30 == 0) {
     spawnAsteroid();
   }
 
@@ -230,7 +237,7 @@ const updatePhysics = () => {
   }
 
   // Asteroids and Bullets
-  for (let i = 0; i < bullets.length; i++) {
+  for (let i = bullets.length - 1; i >= 0; i--) {
     for (let j = 0; j < asteroids.length; j++) {
       if (bullets[i].checkCollision(asteroids[j])) {
         bullets.splice(i, 1);
@@ -265,15 +272,12 @@ const newLife = () => {
   bullets = [];
 };
 
-const pauseGame = (bool) => {
-  if (bool) {
-    paused = !paused;
+const pauseGame = () => {
+  paused = !paused;
+  if (paused) {
     message = "Paused";
-    pframe = false;
-  } else {
-    paused = !paused;
-    pframe = false;
   }
+  pframe = false;
 };
 
 const spawnAsteroid = () => {
@@ -344,13 +348,14 @@ const renderGraphics = () => {
   });
 
   // Draw the bullets
-  bullets.forEach((bullet, index) => {
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const bullet = bullets[i];
     if (!bullet.checkDistance(frame)) {
       canvas.drawBullets(bullet);
     } else {
-      bullets.splice(index, 1);
+      bullets.splice(i, 1);
     }
-  });
+  }
 
   // Draw the score
   canvas.drawScore(score);
@@ -373,11 +378,11 @@ const chooseDiff = () => {
     pframe = false;
   }
 
-  if (keys["Enter"] || keys["Space"]) {
+  if (pressed["Enter"] || pressed["Space"]) {
     newGame = !newGame;
     score = 0;
     reset();
-    pauseGame(false);
+    pauseGame();
   }
 
   canvas.drawDiff(difficulty.getDiff());

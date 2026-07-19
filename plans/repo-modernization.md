@@ -18,7 +18,7 @@ project currently lacks entirely.
       delete the unused, broken `src/controllers/asteroids.js` duplicate and the
       never-wired, syntactically-broken `src/lib/GameLib/` scaffold;
       `src/index.js` is the only real entry point.
-- [ ] [Bug Fixes in Live Game Code](repo-modernization/phase-3-bug-fixes.md) —
+- [x] [Bug Fixes in Live Game Code](repo-modernization/phase-3-bug-fixes.md) —
       fix array-mutation-during-iteration bugs in the bullet/collision loops, the
       rapid-fire audio replay bug, and other correctness issues in the code that
       actually ships.

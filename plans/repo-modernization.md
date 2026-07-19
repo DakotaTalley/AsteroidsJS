@@ -14,7 +14,7 @@ project currently lacks entirely.
       hand-maintaining `dist/index.html`/CSS/assets alongside generated bundles
       so `npm run build` fully reproduces the deployable site from source; also
       bumps `gh-pages`/`prettier` past their major-version gaps.
-- [ ] [Dead Code Removal & Consolidation](repo-modernization/phase-2-dead-code-removal.md) —
+- [x] [Dead Code Removal & Consolidation](repo-modernization/phase-2-dead-code-removal.md) —
       delete the unused, broken `src/controllers/asteroids.js` duplicate and the
       never-wired, syntactically-broken `src/lib/GameLib/` scaffold;
       `src/index.js` is the only real entry point.

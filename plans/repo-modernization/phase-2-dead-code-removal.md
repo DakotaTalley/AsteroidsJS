@@ -45,16 +45,16 @@ could easily start reading the broken copy instead of the real one).
 
 ## Approach
 
-- [ ] Grep the full repo (source and any committed build output) to
+- [x] Grep the full repo (source and any committed build output) to
       reconfirm zero references to `src/controllers/asteroids.js` or
       `src/lib/GameLib/*` outside those files themselves.
-- [ ] Delete `src/controllers/asteroids.js` and the (now-empty)
+- [x] Delete `src/controllers/asteroids.js` and the (now-empty)
       `src/controllers/` directory.
-- [ ] Delete `src/lib/GameLib/` in full.
-- [ ] Run `npm run build` and manually play the game in a browser to confirm
+- [x] Delete `src/lib/GameLib/` in full.
+- [x] Run `npm run build` and manually play the game in a browser to confirm
       no behavior change — this removal should be a pure deletion of
       unreachable code with zero observable effect.
-- [ ] Note in the commit message that this was dead code identified during
+- [x] Note in the commit message that this was dead code identified during
       the modernization review (not a design change), so it doesn't read as
       an unexplained feature removal later.
 

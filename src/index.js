@@ -417,7 +417,12 @@ const chooseDiff = () => {
   canvas.drawSelector(xpos, rectW);
   canvas.drawText("Easy", canvas.width / 3, canvas.height / 2 + 30, "center");
   canvas.drawText("Normal", canvas.width / 2, canvas.height / 2 + 30, "center");
-  canvas.drawText("Hard", (canvas.width * 2) / 3, canvas.height / 2 + 30, "center");
+  canvas.drawText(
+    "Hard",
+    (canvas.width * 2) / 3,
+    canvas.height / 2 + 30,
+    "center",
+  );
 };
 
 // Draw Message

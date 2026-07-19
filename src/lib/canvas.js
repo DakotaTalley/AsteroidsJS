@@ -82,7 +82,6 @@ function Canvas(id) {
     this.context.rect(xpos - 30, this.height / 2 + 8, rectW, 30);
     this.context.stroke();
   };
-
 }
 
 export default Canvas;

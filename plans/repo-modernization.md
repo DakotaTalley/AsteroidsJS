@@ -22,7 +22,7 @@ project currently lacks entirely.
       fix array-mutation-during-iteration bugs in the bullet/collision loops, the
       rapid-fire audio replay bug, and other correctness issues in the code that
       actually ships.
-- [ ] [Security & Repo Hygiene](repo-modernization/phase-4-build-security-hygiene.md) —
+- [x] [Security & Repo Hygiene](repo-modernization/phase-4-build-security-hygiene.md) —
       add CI plus baseline web hardening (CSP, font hosting), building on the
       root `index.html`/`public/` layout Phase 1 already establishes.
 - [ ] [Performance](repo-modernization/phase-5-performance.md) — cache the

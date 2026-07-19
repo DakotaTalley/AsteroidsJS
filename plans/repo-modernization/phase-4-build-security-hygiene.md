@@ -37,7 +37,7 @@ versioning/changelog discipline exists (see Open Questions).
 
 ## Approach
 
-- [ ] Confirm [Phase 1](phase-1-dependency-toolchain.md) has landed —
+- [x] Confirm [Phase 1](phase-1-dependency-toolchain.md) has landed —
       `index.html` and `public/` should already exist at the repo root
       before starting this phase.
 - [x] Self-host the Turret Road font instead of the Google Fonts CDN
@@ -50,13 +50,16 @@ versioning/changelog discipline exists (see Open Questions).
       `dist/index.html`. [Phase 1](phase-1-dependency-toolchain.md)'s
       relocation of these files into root `index.html` + `public/` should
       carry `assets/fonts/` along unchanged.
-- [ ] Add a `Content-Security-Policy` meta tag to `index.html`, scoped to
+- [x] Add a `Content-Security-Policy` meta tag to `index.html`, scoped to
       `self` — no external font origin is needed now that the font is
-      self-hosted.
-- [ ] Add a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs
+      self-hosted. Landed as `default-src 'self'`; verified via
+      `vite preview` that every resource the page references (stylesheet,
+      JS bundle, self-hosted font, both `.wav` sound effects) is
+      same-origin and resolves under that policy.
+- [x] Add a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs
       `npm ci` and `npm run build` on every push/PR; extend it with
       lint/test once [Phase 6](phase-6-tooling-testing.md) lands.
-- [ ] Add a release job to the same workflow (or a separate
+- [x] Add a release job to the same workflow (or a separate
       `.github/workflows/release.yml`), triggered on `v*` tag push: run
       `npm ci && npm run build`, zip `dist/`, and attach it to a GitHub
       Release (e.g. via `softprops/action-gh-release`). This is additive to
@@ -70,10 +73,15 @@ versioning/changelog discipline exists (see Open Questions).
         as part of the same commit that gets tagged, not after the fact.
         Neither exists yet; add both before or alongside this step rather
         than shipping the workflow with nothing to reference.
+        Resolved: version bumped to `1.1.0` and `CHANGELOG.md` added
+        (Keep a Changelog format) with a `[1.1.0]` entry covering
+        Phases 1–4.
 
 ## Open Questions
 
-- Versioning/changelog process (semver bump + `CHANGELOG.md` entry per
+- ~~Versioning/changelog process (semver bump + `CHANGELOG.md` entry per
   release) doesn't exist yet and isn't otherwise in scope for this phase —
   needs a decision on where that discipline gets introduced (this phase vs.
-  a prerequisite step) before the release workflow above is wired up.
+  a prerequisite step) before the release workflow above is wired up.~~
+  Resolved: introduced in this phase, alongside the release workflow —
+  see the checklist item above.

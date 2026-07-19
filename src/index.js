@@ -42,6 +42,7 @@ let lives;
 if (!localStorage.getItem("high")) {
   localStorage.setItem("high", 0);
 }
+let highScore = Number(localStorage.getItem("high"));
 
 const rButton = document.getElementById("reset-high");
 const resetHighDialog = document.getElementById("reset-high-dialog");
@@ -53,6 +54,7 @@ rButton.addEventListener("click", () => {
 });
 
 resetHighConfirm.addEventListener("click", () => {
+  highScore = 0;
   localStorage.setItem("high", 0);
   resetHighDialog.close();
 });
@@ -151,7 +153,8 @@ const updateTiming = () => {
 
 const updateGame = () => {
   // Update High Score
-  if (localStorage.getItem("high") < score) {
+  if (highScore < score) {
+    highScore = score;
     localStorage.setItem("high", score);
   }
 
@@ -374,7 +377,7 @@ const renderGraphics = () => {
   canvas.drawScore(score);
 
   // Draw the High Score
-  canvas.drawHigh(localStorage.getItem("high"));
+  canvas.drawHigh(highScore);
 
   // Draw the lives
   canvas.drawLives(lives, spaceship);
@@ -405,7 +408,7 @@ const chooseDiff = () => {
 const drawMessage = () => {
   canvas.setBackground("#000000");
   canvas.drawScore(score);
-  canvas.drawHigh(localStorage.getItem("high"));
+  canvas.drawHigh(highScore);
   canvas.drawLives(lives, spaceship);
 
   canvas.drawPaused(message);

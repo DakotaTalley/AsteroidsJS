@@ -1,8 +1,21 @@
 function Canvas(id) {
   this.canvas = document.getElementById(id);
   this.context = this.canvas.getContext("2d");
+
+  // The width/height attributes are the intended CSS/layout size. Scale the
+  // backing pixel buffer by devicePixelRatio for sharpness on high-DPI
+  // displays, constrain the visible CSS size to that same layout size, and
+  // keep `this.width`/`this.height` in logical (CSS) pixels since all game
+  // logic and draw math is expressed in those units.
   this.width = this.canvas.width;
   this.height = this.canvas.height;
+  this.dpr = window.devicePixelRatio || 1;
+
+  this.canvas.width = this.width * this.dpr;
+  this.canvas.height = this.height * this.dpr;
+  this.canvas.style.width = `${this.width}px`;
+  this.canvas.style.height = `${this.height}px`;
+  this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
 
   this.setBackground = function (color) {
     this.context.fillStyle = color;
@@ -19,7 +32,7 @@ function Canvas(id) {
     this.context.lineTo(spaceship.w / 2, spaceship.h / 2);
     this.context.fill();
     this.context.rotate((-spaceship.orientation * Math.PI) / 180);
-    this.context.setTransform(1, 0, 0, 1, 0, 0);
+    this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
   };
 
   this.drawAsteroids = function (ast, bounds) {
@@ -32,7 +45,7 @@ function Canvas(id) {
       this.context.lineTo(bounds[i].x, bounds[i].y);
     }
     this.context.stroke();
-    this.context.setTransform(1, 0, 0, 1, 0, 0);
+    this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
   };
 
   this.drawBullets = function (bul) {
@@ -45,7 +58,7 @@ function Canvas(id) {
     this.context.lineTo(bul.w / 2, bul.h / 2);
     this.context.lineTo(-bul.w / 2, bul.h / 2);
     this.context.fill();
-    this.context.setTransform(1, 0, 0, 1, 0, 0);
+    this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
   };
 
   this.drawScore = function (score) {
@@ -73,7 +86,7 @@ function Canvas(id) {
       this.context.lineTo(-spaceship.w / 2, spaceship.h / 2);
       this.context.lineTo(spaceship.w / 2, spaceship.h / 2);
       this.context.fill();
-      this.context.setTransform(1, 0, 0, 1, 0, 0);
+      this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
 
       xLoc += spaceship.w * 2;
     }

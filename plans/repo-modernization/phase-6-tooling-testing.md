@@ -23,35 +23,35 @@ directly.
 
 ## Approach
 
-- [ ] Add ESLint (flat config, `eslint.config.js`) targeting a browser +
+- [x] Add ESLint (flat config, `eslint.config.js`) targeting a browser +
       ES2022 environment; add `eslint-config-prettier` so lint and format
       rules don't conflict.
-- [ ] Add a committed `.prettierrc` capturing the project's actual
+- [x] Add a committed `.prettierrc` capturing the project's actual
       formatting choices — currently implicit defaults — so the prettier 3
       upgrade in [Phase 1](phase-1-dependency-toolchain.md) doesn't silently
       shift style expectations for contributors with no record of the
       decision.
-- [ ] Add `.editorconfig` for basic cross-editor consistency (indent
+- [x] Add `.editorconfig` for basic cross-editor consistency (indent
       style/size, final newline, charset).
-- [ ] Add `"lint": "eslint ."` and `"format": "prettier --check ."` scripts
+- [x] Add `"lint": "eslint ."` and `"format": "prettier --check ."` scripts
       to `package.json`.
-- [ ] Introduce a real test runner — Vitest is the natural fit here (no
+- [x] Introduce a real test runner — Vitest is the natural fit here (no
       other test-framework opinion exists in the repo, and post-[Phase
       1](phase-1-dependency-toolchain.md) it shares config with Vite
       directly, needing no extra setup for this ESM project) — and replace
       the always-failing `npm test` stub.
-- [ ] Write unit tests:
-  - [ ] `entity.js`: `updatePosition` screen-wraparound at each edge,
+- [x] Write unit tests:
+  - [x] `entity.js`: `updatePosition` screen-wraparound at each edge,
         `accelerate`/`decelerate` max-speed clamping in all four directions,
         `checkCollision` true/false cases.
-  - [ ] `asteroid.js`: `genBounds` point count matches `numSides`, `split()`
+  - [x] `asteroid.js`: `genBounds` point count matches `numSides`, `split()`
         returns `0` at size 1 and a two-asteroid array otherwise.
-  - [ ] `bullet.js`: `checkDistance` frame-based expiry timing.
-  - [ ] `difficulty.js`: `increaseDiff`/`decreaseDiff` clamp at both ends of
+  - [x] `bullet.js`: `checkDistance` frame-based expiry timing.
+  - [x] `difficulty.js`: `increaseDiff`/`decreaseDiff` clamp at both ends of
         the range.
-  - [ ] `spaceship.js`: `shoot()` velocity direction math, `getBounds()`
+  - [x] `spaceship.js`: `shoot()` velocity direction math, `getBounds()`
         shape.
-- [ ] Wire `npm run lint`, `npm run format -- --check`, and `npm test` into
+- [x] Wire `npm run lint`, `npm run format -- --check`, and `npm test` into
       the CI workflow added in [Phase 4](phase-4-build-security-hygiene.md).
 
 ## Open Questions

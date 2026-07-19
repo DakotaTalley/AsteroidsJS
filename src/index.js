@@ -1,14 +1,13 @@
 import Canvas from "./lib/canvas";
 import Spaceship from "./models/spaceship";
 import Asteroid from "./models/asteroid";
-import Sound from "./models/sound";
+import Sound from "./lib/sound";
 import Difficulty from "./models/difficulty";
 
 // Set up Game Objects
 //// Game Timing
 const GAME_FPS = 60;
 let lastTick = performance.now();
-let t = 0;
 const dt = 0.01;
 let accumulator = 0;
 let timeLastPause = performance.now();
@@ -299,10 +298,10 @@ const pauseGame = () => {
 const spawnAsteroid = () => {
   const sIndex = Math.floor(Math.random() * 4);
   const aSize = Math.floor(Math.random() * 3 + 1);
-  let spawnx = 0;
-  let spawny = 0;
-  let spawndx = 0;
-  let spawndy = 0;
+  let spawnx;
+  let spawny;
+  let spawndx;
+  let spawndy;
   let newAsteroid;
 
   switch (SPAWNS[sIndex]) {

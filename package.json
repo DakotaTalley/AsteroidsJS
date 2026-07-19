@@ -3,8 +3,11 @@
   "version": "1.1.0",
   "description": "![Logo](img/logo-text.png)",
   "private": true,
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --check .",
     "build": "vite build",
     "start": "vite",
     "deploy": "npm run build && gh-pages -d dist"
@@ -23,8 +26,13 @@
     "node": ">=22.12.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
     "gh-pages": "^6.3.0",
+    "globals": "^17.7.0",
     "prettier": "^3.9.5",
-    "vite": "^8.1.5"
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
   }
 }

@@ -31,7 +31,7 @@ project currently lacks entirely.
       scoped as a research sub-section of this phase moved to
       [2.0 Features](2.0-features.md#wasm-feasibility-investigation) —
       forward-looking research, not part of this modernization pass.)
-- [ ] [Developer Tooling & Testing](repo-modernization/phase-6-tooling-testing.md) —
+- [x] [Developer Tooling & Testing](repo-modernization/phase-6-tooling-testing.md) —
       add ESLint, replace the always-failing `npm test` stub with real unit
       tests for the pure-logic model classes, and wire lint/test into CI.
 

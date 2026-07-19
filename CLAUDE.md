@@ -7,4 +7,7 @@ This project follows [`.ai/constitution.md`](.ai/constitution.md) for general de
 **Agents** (`.claude/agents/`): code-writer,docs-writer,research,test-writer
 
 **Skills** (`.claude/skills/`): add-framework,add-rule,phased-plan,plan-feature,sync-guidance,update-docs,update-readme,verify
+
+**Framework guidance:**
+- [`.frameworks/canvas/rules.md`](.frameworks/canvas/rules.md)
 <!-- ai-template:end -->

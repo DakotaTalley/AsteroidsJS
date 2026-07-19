@@ -180,6 +180,19 @@ content_matches() {
   return 1
 }
 
+# Like content_matches, but spans several source extensions at once (Canvas
+# API usage has no single manifest file to key off of the way a package.json
+# dependency or a .csproj does).
+has_canvas_usage() {
+  local f
+  while IFS= read -r -d '' f; do
+    grep -qE "getContext\([\"'](2d|webgl2?|bitmaprenderer)[\"']\)|<canvas" "$f" 2>/dev/null && return 0
+  done < <(find "$TARGET_DIR" -mindepth 1 \( "${PRUNE_DIRS[@]}" \) -prune -o \
+        \( -iname "*.js" -o -iname "*.jsx" -o -iname "*.ts" -o -iname "*.tsx" -o -iname "*.html" \) \
+        -print0 2>/dev/null)
+  return 1
+}
+
 if has_file "*.csproj" || has_file "*.sln"; then
   DETECTED+=("dotnet")
 fi
@@ -191,6 +204,7 @@ fi
 has_file "Cargo.toml" && DETECTED+=("rust")
 has_file "project.godot" && DETECTED+=("godot")
 has_file "tsconfig.json" && DETECTED+=("typescript")
+has_canvas_usage && DETECTED+=("canvas")
 
 if [[ ${#DETECTED[@]} -eq 0 ]]; then
   echo "  none detected"

@@ -1,21 +1,11 @@
 class Entity {
-  constructor(x, y, dx, dy, orientation, jerk) {
+  constructor(x, y, dx, dy, orientation) {
     this.x = x;
     this.y = y;
     this.dx = dx;
     this.dy = dy;
-    this.jerk = jerk;
     this.orientation = orientation;
     this.color = "#000000";
-    this.maxD = 0.5;
-  }
-
-  getX() {
-    return this.x;
-  }
-
-  getY() {
-    return this.y;
   }
 
   setX(x) {
@@ -57,48 +47,9 @@ class Entity {
     }
   }
 
-  accelerate(dt) {
-    var deg = this.mathifyOrientation();
-    this.dx += (Math.cos(deg) / this.jerk) * dt;
-    this.dy -= (Math.sin(deg) / this.jerk) * dt;
-
-    // Max Speed Check
-    if (this.dx > this.maxD) {
-      this.dx = this.maxD;
-    }
-    if (this.dx < -this.maxD) {
-      this.dx = -this.maxD;
-    }
-    if (this.dy > this.maxD) {
-      this.dy = this.maxD;
-    }
-    if (this.dy < -this.maxD) {
-      this.dy = -this.maxD;
-    }
-  }
-
-  decelerate(dt) {
-    var deg = this.mathifyOrientation();
-    this.dx -= (Math.cos(deg) / this.jerk) * dt;
-    this.dy += (Math.sin(deg) / this.jerk) * dt;
-
-    // Max Speed Check
-    if (this.dx > this.maxD) {
-      this.dx = this.maxD;
-    }
-    if (this.dx < -this.maxD) {
-      this.dx = -this.maxD;
-    }
-    if (this.dy > this.maxD) {
-      this.dy = this.maxD;
-    }
-    if (this.dy < -this.maxD) {
-      this.dy = -this.maxD;
-    }
-  }
-
-  mathifyOrientation() {
-    // Convert to degrees, then convert to radians.
+  orientationToRadians() {
+    // Compass orientation (0 = up, clockwise-positive) to a standard math
+    // angle in radians (0 = +x axis, counterclockwise-positive).
     return (90 - this.orientation) * (Math.PI / 180);
   }
 

@@ -3,7 +3,9 @@ import Bullet from "../models/bullet";
 
 class Spaceship extends Entity {
   constructor(x, y) {
-    super(x, y, 0, 0, 0, 10);
+    super(x, y, 0, 0, 0);
+    this.jerk = 10;
+    this.maxD = 0.5;
     this.h = 20;
     this.w = 12;
     this.color = "#FFFFFF";
@@ -18,10 +20,41 @@ class Spaceship extends Entity {
     this.setDy(0);
   }
 
+  accelerate(dt) {
+    var rad = this.orientationToRadians();
+    this.dx += (Math.cos(rad) / this.jerk) * dt;
+    this.dy -= (Math.sin(rad) / this.jerk) * dt;
+
+    this.clampSpeed();
+  }
+
+  decelerate(dt) {
+    var rad = this.orientationToRadians();
+    this.dx -= (Math.cos(rad) / this.jerk) * dt;
+    this.dy += (Math.sin(rad) / this.jerk) * dt;
+
+    this.clampSpeed();
+  }
+
+  clampSpeed() {
+    if (this.dx > this.maxD) {
+      this.dx = this.maxD;
+    }
+    if (this.dx < -this.maxD) {
+      this.dx = -this.maxD;
+    }
+    if (this.dy > this.maxD) {
+      this.dy = this.maxD;
+    }
+    if (this.dy < -this.maxD) {
+      this.dy = -this.maxD;
+    }
+  }
+
   shoot(frame) {
-    var deg = this.mathifyOrientation();
-    var dx = Math.cos(deg) * 0.5;
-    var dy = Math.sin(deg) * -0.5;
+    var rad = this.orientationToRadians();
+    var dx = Math.cos(rad) * 0.5;
+    var dy = Math.sin(rad) * -0.5;
 
     return new Bullet(this.x, this.y, dx, dy, frame);
   }

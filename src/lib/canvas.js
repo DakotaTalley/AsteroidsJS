@@ -36,20 +36,18 @@ function Canvas(id) {
   };
 
   this.drawAsteroids = function (ast, bounds) {
-    this.context.strokeStyle = "#FFFFFF";
+    this.context.strokeStyle = ast.color;
     this.context.lineWidth = 1;
-    this.context.translate(ast.x, ast.y);
     this.context.beginPath();
     this.context.moveTo(bounds[0].x, bounds[0].y);
     for (let i = 1; i < ast.numSides + 1; i++) {
       this.context.lineTo(bounds[i].x, bounds[i].y);
     }
     this.context.stroke();
-    this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
   };
 
   this.drawBullets = function (bul) {
-    this.context.fillStyle = "#FFFFFF";
+    this.context.fillStyle = bul.color;
 
     this.context.translate(bul.x, bul.y);
     this.context.beginPath();

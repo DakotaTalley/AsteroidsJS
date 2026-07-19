@@ -2,7 +2,8 @@ import Entity from "./entity";
 
 class Bullet extends Entity {
   constructor(x, y, dx, dy, frame) {
-    super(x, y, dx, dy, 0, 0);
+    super(x, y, dx, dy, 0);
+    this.color = "#FFFFFF";
     this.h = 4;
     this.w = 4;
     this.frame = frame;

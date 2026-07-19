@@ -1,11 +1,16 @@
+export const DIFFICULTY = {
+  EASY: 1,
+  NORMAL: 2,
+  HARD: 3,
+};
+
 class Difficulty {
   constructor() {
-    this.arr = [1, 2, 3];
-    this.diff = this.arr[0];
+    this.diff = DIFFICULTY.EASY;
   }
 
   increaseDiff() {
-    if (this.diff == this.arr[2]) {
+    if (this.diff == DIFFICULTY.HARD) {
       return;
     } else {
       this.diff++;
@@ -13,7 +18,7 @@ class Difficulty {
   }
 
   decreaseDiff() {
-    if (this.diff == this.arr[0]) {
+    if (this.diff == DIFFICULTY.EASY) {
       return;
     } else {
       this.diff--;

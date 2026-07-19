@@ -25,6 +25,90 @@ describe("Spaceship#shoot", () => {
   });
 });
 
+describe("Spaceship#accelerate", () => {
+  it.each([
+    {
+      name: "dx above maxD",
+      orientation: 90,
+      dx: 0.4,
+      dy: 0,
+      expected: { dx: 0.5, dy: 0 },
+    },
+    {
+      name: "dx below -maxD",
+      orientation: 270,
+      dx: -0.4,
+      dy: 0,
+      expected: { dx: -0.5, dy: 0 },
+    },
+    {
+      name: "dy above maxD",
+      orientation: 180,
+      dx: 0,
+      dy: 0.4,
+      expected: { dx: 0, dy: 0.5 },
+    },
+    {
+      name: "dy below -maxD",
+      orientation: 0,
+      dx: 0,
+      dy: -0.4,
+      expected: { dx: 0, dy: -0.5 },
+    },
+  ])("clamps $name to maxD", ({ orientation, dx, dy, expected }) => {
+    const s = new Spaceship(0, 0);
+    s.jerk = 1;
+    s.setO(orientation);
+    s.setDx(dx);
+    s.setDy(dy);
+    s.accelerate(1);
+    expect(s.dx).toBeCloseTo(expected.dx);
+    expect(s.dy).toBeCloseTo(expected.dy);
+  });
+});
+
+describe("Spaceship#decelerate", () => {
+  it.each([
+    {
+      name: "dx above maxD",
+      orientation: 270,
+      dx: 0.4,
+      dy: 0,
+      expected: { dx: 0.5, dy: 0 },
+    },
+    {
+      name: "dx below -maxD",
+      orientation: 90,
+      dx: -0.4,
+      dy: 0,
+      expected: { dx: -0.5, dy: 0 },
+    },
+    {
+      name: "dy above maxD",
+      orientation: 0,
+      dx: 0,
+      dy: 0.4,
+      expected: { dx: 0, dy: 0.5 },
+    },
+    {
+      name: "dy below -maxD",
+      orientation: 180,
+      dx: 0,
+      dy: -0.4,
+      expected: { dx: 0, dy: -0.5 },
+    },
+  ])("clamps $name to maxD", ({ orientation, dx, dy, expected }) => {
+    const s = new Spaceship(0, 0);
+    s.jerk = 1;
+    s.setO(orientation);
+    s.setDx(dx);
+    s.setDy(dy);
+    s.decelerate(1);
+    expect(s.dx).toBeCloseTo(expected.dx);
+    expect(s.dy).toBeCloseTo(expected.dy);
+  });
+});
+
 describe("Spaceship#getBounds", () => {
   it("returns the three points of the ship's triangle", () => {
     const s = new Spaceship(0, 0);

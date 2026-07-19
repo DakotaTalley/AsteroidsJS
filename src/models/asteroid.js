@@ -2,13 +2,14 @@ import Entity from "./entity";
 
 class Asteroid extends Entity {
   constructor(x, y, dx, dy, size, numSides) {
-    super(x, y, dx, dy, 0, 10);
+    super(x, y, dx, dy, 0);
 
+    this.color = "#FFFFFF";
     this.size = size;
     this.numSides = numSides;
     this.r = 5 * this.size;
     this.maxR = 0;
-    this.bounds = this.genBounds();
+    this.localBounds = this.genBounds();
     this.h = this.maxR * 2;
     this.w = this.maxR * 2;
   }
@@ -28,8 +29,14 @@ class Asteroid extends Entity {
     return points;
   }
 
+  // Bound getter for collisions/drawing — local shape translated to the
+  // asteroid's current position, matching Bullet/Spaceship's absolute
+  // coordinates.
   getBounds() {
-    return this.bounds;
+    return this.localBounds.map((p) => ({
+      x: p.x + this.x,
+      y: p.y + this.y,
+    }));
   }
 
   checkMaxR(r) {

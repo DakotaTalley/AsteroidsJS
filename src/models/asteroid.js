@@ -49,7 +49,7 @@ class Asteroid extends Entity {
         this.dx,
         this.dy * -1,
         newSize,
-        this.numSides
+        this.numSides,
       );
       var newA2 = new Asteroid(
         this.x,
@@ -57,7 +57,7 @@ class Asteroid extends Entity {
         this.dx * -1,
         this.dy,
         newSize,
-        this.numSides
+        this.numSides,
       );
 
       return [newA1, newA2];

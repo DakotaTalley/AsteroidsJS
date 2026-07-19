@@ -5,4 +5,3 @@
 AsteroidsJS is an Asteroids clone written in JavaScript. It utilizes Canvas API for drawing the game objects. Play it now at https://jdtalley.itch.io/asteroidsjs.
 
 [![GIF demo](img/ajsgif1.gif)](https://jdtalley.itch.io/asteroidsjs)
-

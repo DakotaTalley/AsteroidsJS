@@ -58,16 +58,23 @@ class Entity {
     this.orientation += amount;
   }
 
+  // Tests this entity's bound points against a circle centered on `entity`.
+  // A circle is a much closer match to a drawn asteroid's polygon than its
+  // axis-aligned bounding box (which spans up to 2x the mean radius), so
+  // near-corner passes and edge-overlap misses are both less likely. Targets
+  // that expose getCollisionRadius() (e.g. Asteroid) use it directly;
+  // others fall back to half their larger bounding-box dimension.
   checkCollision(entity) {
     var thisBounds = this.getBounds();
+    var radius = entity.getCollisionRadius
+      ? entity.getCollisionRadius()
+      : Math.max(entity.w, entity.h) / 2;
 
     for (let i = 0; i < thisBounds.length; i++) {
-      if (
-        thisBounds[i].x > entity.x - entity.w / 2 &&
-        thisBounds[i].x < entity.x + entity.w / 2 &&
-        thisBounds[i].y > entity.y - entity.h / 2 &&
-        thisBounds[i].y < entity.y + entity.h / 2
-      ) {
+      var dx = thisBounds[i].x - entity.x;
+      var dy = thisBounds[i].y - entity.y;
+
+      if (dx * dx + dy * dy < radius * radius) {
         return true;
       }
     }

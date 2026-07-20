@@ -24,6 +24,13 @@ describe("Asteroid#getDrawShape", () => {
   });
 });
 
+describe("Asteroid#getCollisionRadius", () => {
+  it("returns the mean of the base and max vertex radii", () => {
+    const a = new Asteroid(100, 100, 0.1, 0.1, 3, 8);
+    expect(a.getCollisionRadius()).toBeCloseTo((a.r + a.maxR) / 2);
+  });
+});
+
 describe("Asteroid#split", () => {
   it("returns 0 when splitting a size-1 asteroid", () => {
     const a = new Asteroid(100, 100, 0.1, 0.1, 1, 8);

@@ -59,6 +59,13 @@ class Asteroid extends Entity {
     }
   }
 
+  // Radius used for circle-based collision tests (see Entity#checkCollision)
+  // — the mean of the base and max vertex radii, since genBounds scatters
+  // vertices uniformly across [r, maxR] rather than at a single distance.
+  getCollisionRadius() {
+    return (this.r + this.maxR) / 2;
+  }
+
   split() {
     if (this.size - 1 == 0) {
       return 0;

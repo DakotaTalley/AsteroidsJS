@@ -28,27 +28,24 @@ describe("Entity#updatePosition", () => {
 });
 
 describe("Entity#checkCollision", () => {
-  it("returns true when a bound point falls inside the target box", () => {
+  it("returns true when a bound point falls within the target's collision radius", () => {
     const e = new Entity(10, 10, 0, 0, 0);
-    e.getBounds = () => [
-      { x: 8, y: 8 },
-      { x: 12, y: 8 },
-      { x: 12, y: 12 },
-      { x: 8, y: 12 },
-    ];
-    const target = { x: 10, y: 10, w: 20, h: 20 };
+    e.getBounds = () => [{ x: 13, y: 10 }];
+    const target = { x: 10, y: 10, getCollisionRadius: () => 5 };
     expect(e.checkCollision(target)).toBe(true);
   });
 
-  it("returns false when no bound point falls inside the target box", () => {
+  it("returns false when no bound point falls within the target's collision radius", () => {
     const e = new Entity(10, 10, 0, 0, 0);
-    e.getBounds = () => [
-      { x: 8, y: 8 },
-      { x: 12, y: 8 },
-      { x: 12, y: 12 },
-      { x: 8, y: 12 },
-    ];
-    const target = { x: 100, y: 100, w: 10, h: 10 };
+    e.getBounds = () => [{ x: 100, y: 100 }];
+    const target = { x: 10, y: 10, getCollisionRadius: () => 5 };
     expect(e.checkCollision(target)).toBe(false);
+  });
+
+  it("falls back to half the target's larger bounding-box dimension when it has no getCollisionRadius", () => {
+    const e = new Entity(10, 10, 0, 0, 0);
+    e.getBounds = () => [{ x: 14, y: 10 }];
+    const target = { x: 10, y: 10, w: 10, h: 20 };
+    expect(e.checkCollision(target)).toBe(true);
   });
 });

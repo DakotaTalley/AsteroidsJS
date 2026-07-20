@@ -1,13 +1,20 @@
 import Entity from "./entity";
 
 class Bullet extends Entity {
-  constructor(x, y, dx, dy, frame) {
+  constructor(x, y, dx, dy) {
     super(x, y, dx, dy, 0);
     this.color = "#FFFFFF";
     this.h = 4;
     this.w = 4;
-    this.frame = frame;
-    this.time = 0;
+  }
+
+  // Bullets don't wrap like other entities — leaving the playfield means
+  // the bullet is gone (see isOffScreen), not that it re-enters the far
+  // edge. This also sidesteps any pause-related time confusion, since
+  // expiry now depends only on position, never on a clock.
+  updatePosition(width, height, dt) {
+    this.x += this.dx * dt;
+    this.y += this.dy * dt;
   }
 
   // Bound getter for collisions
@@ -49,14 +56,9 @@ class Bullet extends Entity {
     };
   }
 
-  // Check distance travelled by frames since creation
-  checkDistance(frame) {
-    if (this.time < 2 && this.frame == frame) {
-      this.time++;
-    }
-    if (this.time > 1) {
-      return true;
-    }
+  // True once the bullet has left the visible playfield.
+  isOffScreen(width, height) {
+    return this.x < 0 || this.x > width || this.y < 0 || this.y > height;
   }
 }
 

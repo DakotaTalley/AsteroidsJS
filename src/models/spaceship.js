@@ -51,28 +51,31 @@ class Spaceship extends Entity {
     }
   }
 
-  shoot(frame) {
+  shoot() {
     var rad = this.orientationToRadians();
     var dx = Math.cos(rad) * 0.5;
     var dy = Math.sin(rad) * -0.5;
 
-    return new Bullet(this.x, this.y, dx, dy, frame);
+    return new Bullet(this.x, this.y, dx, dy);
   }
 
+  // Collision triangle, rotated by `orientation` using the same transform
+  // the renderer applies in getDrawShape — otherwise the hitbox stays
+  // nose-up while the drawn sprite turns, and the two disagree.
   getBounds() {
-    var p0 = {
-      x: this.x,
-      y: this.y - this.h / 2,
-    };
-    var p1 = {
-      x: this.x + this.w / 2,
-      y: this.y + this.h / 2,
-    };
-    var p2 = {
-      x: this.x - this.w / 2,
-      y: this.y + this.h / 2,
-    };
-    return [p0, p1, p2];
+    var rad = (this.orientation * Math.PI) / 180;
+    var cos = Math.cos(rad);
+    var sin = Math.sin(rad);
+    var localPoints = [
+      { x: 0, y: -this.h / 2 },
+      { x: this.w / 2, y: this.h / 2 },
+      { x: -this.w / 2, y: this.h / 2 },
+    ];
+
+    return localPoints.map((p) => ({
+      x: this.x + p.x * cos - p.y * sin,
+      y: this.y + p.x * sin + p.y * cos,
+    }));
   }
 
   // Drawing primitive for Canvas#drawEntity — a filled triangle in

@@ -6,16 +6,26 @@ import Difficulty from "./models/difficulty";
 
 // Set up Game Objects
 //// Game Timing
-const GAME_FPS = 60;
 let lastTick = performance.now();
 // Physics step, in ms (accumulator is fed ms deltas from performance.now()).
 const dt = 10;
-// Preserves the original per-frame ship acceleration impulse now that `dt`
-// is ms-scale; accelerate()/decelerate() are still called once per rAF frame.
-const ACCEL_IMPULSE = 0.01;
 // Spiral-of-death guard: cap how much elapsed time one frame can queue.
 const MAX_FRAME_MS = 100;
 let accumulator = 0;
+// Real-time accounting for score-per-second and asteroid spawn gating, so
+// both stay tied to elapsed time rather than requestAnimationFrame ticks
+// (which vary with display refresh rate).
+let scoreAccumulator = 0;
+let spawnAccumulator = 0;
+const SCORE_INTERVAL_MS = 1000;
+const SPAWN_CHECK_INTERVAL_MS = 500;
+// Steering/thrust rates, applied once per fixed physics step (see
+// updatePhysics) so they scale with real time instead of refresh rate.
+const ROTATION_DEG_PER_SEC = 120;
+const ACCEL_PER_SEC = 0.6;
+// One extra life is awarded each time total score crosses a multiple of
+// this value, regardless of which scoring path crossed it.
+const LIFE_SCORE_INTERVAL = 100;
 //// Input
 let keys = {};
 // Latches a keydown edge for one gameTick, so a keydown+keyup pair that
@@ -59,12 +69,13 @@ window.addEventListener("blur", () => {
 });
 //// Game Variables
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
+// Floor on a spawned asteroid's into-screen speed component (px/ms).
+const MIN_SPAWN_SPEED = 0.05;
 let paused = true;
 let newGame = true;
 let pframe = true;
 let message = "Choose your Difficulty.";
 let difficulty = new Difficulty();
-let frame;
 let score = 0;
 let lives;
 //// High Score Tracking
@@ -119,7 +130,6 @@ const startGame = () => {
 
 // Reset Game Function
 const reset = () => {
-  frame = 1;
   lives = 2;
   paused = true;
 
@@ -163,17 +173,19 @@ const gameTick = () => {
       drawMessage();
     }
   } else {
+    const now = performance.now();
+
     // update timing
-    updateTiming();
+    updateTiming(now);
 
     // update game variables
     updateGame();
 
     // check input
-    checkInput();
+    checkInput(now);
 
-    // Asteroid Spawning — decided once per gameTick, not once per physics
-    // sub-step (the gating condition is constant for the whole tick).
+    // Asteroid Spawning — decided against real elapsed time, not once per
+    // physics sub-step or rAF tick (both vary with refresh rate/hangs).
     checkAsteroidSpawn();
 
     // update physics
@@ -200,11 +212,25 @@ const gameTick = () => {
   queueTick();
 };
 
-const updateTiming = () => {
-  let current = performance.now();
+const updateTiming = (current) => {
   let elapsed = Math.min(current - lastTick, MAX_FRAME_MS);
   lastTick = current;
   accumulator += elapsed;
+  scoreAccumulator += elapsed;
+  spawnAccumulator += elapsed;
+};
+
+// Awards an extra life each time total score crosses a multiple of
+// LIFE_SCORE_INTERVAL, regardless of which scoring path (time tick or
+// asteroid kill) crossed it. Call this instead of assigning `score`
+// directly so the two paths can't disagree or double-award.
+const addScore = (amount) => {
+  const before = Math.floor(score / LIFE_SCORE_INTERVAL);
+  score += amount;
+  const after = Math.floor(score / LIFE_SCORE_INTERVAL);
+  if (after > before) {
+    lives += after - before;
+  }
 };
 
 const updateGame = () => {
@@ -214,41 +240,14 @@ const updateGame = () => {
     localStorage.setItem("high", score);
   }
 
-  // Frame Counter
-  if (frame < GAME_FPS) {
-    frame += 1;
-  } else {
-    frame = 1;
-  }
-
-  // Per second score
-  if (frame == 60) {
-    score++;
-  }
-
-  // New Life Check
-  if (score % 50 == 0 && frame == 60) {
-    lives++;
+  // Per-second score, accounted in real elapsed time rather than rAF ticks.
+  while (scoreAccumulator >= SCORE_INTERVAL_MS) {
+    scoreAccumulator -= SCORE_INTERVAL_MS;
+    addScore(1);
   }
 };
 
-const checkInput = () => {
-  // Ship Rotation
-  if (keys["KeyA"] || keys["ArrowLeft"]) {
-    spaceship.rotate(-2);
-  }
-  if (keys["KeyD"] || keys["ArrowRight"]) {
-    spaceship.rotate(2);
-  }
-
-  // Ship Acceleration / Deceleration
-  if (keys["KeyW"] || keys["ArrowUp"]) {
-    spaceship.accelerate(ACCEL_IMPULSE);
-  }
-  if (keys["KeyS"] || keys["ArrowDown"]) {
-    spaceship.decelerate(ACCEL_IMPULSE);
-  }
-
+const checkInput = (now) => {
   // Pause
   if (pressed["Enter"] || pressed["KeyP"]) {
     pauseGame();
@@ -256,10 +255,8 @@ const checkInput = () => {
 
   // Shooting
   if (keys["Space"]) {
-    let now = performance.now();
-
     if (now - spaceship.timeLastShoot > 250) {
-      bullets.push(spaceship.shoot(frame));
+      bullets.push(spaceship.shoot());
       spaceship.timeLastShoot = now;
       pewSound.play();
     }
@@ -267,19 +264,43 @@ const checkInput = () => {
 };
 
 const checkAsteroidSpawn = () => {
-  if (asteroids.length < Math.log(score + 1) && frame % 30 == 0) {
-    spawnAsteroid();
+  while (spawnAccumulator >= SPAWN_CHECK_INTERVAL_MS) {
+    spawnAccumulator -= SPAWN_CHECK_INTERVAL_MS;
+
+    if (asteroids.length < Math.log(score + 1)) {
+      spawnAsteroid();
+    }
   }
 };
 
 const updatePhysics = () => {
+  // Steering / thrust — driven by held keys, applied once per fixed physics
+  // step so turn rate and acceleration are tied to real time rather than
+  // the display's refresh rate.
+  if (keys["KeyA"] || keys["ArrowLeft"]) {
+    spaceship.rotate(-ROTATION_DEG_PER_SEC * (dt / 1000));
+  }
+  if (keys["KeyD"] || keys["ArrowRight"]) {
+    spaceship.rotate(ROTATION_DEG_PER_SEC * (dt / 1000));
+  }
+  if (keys["KeyW"] || keys["ArrowUp"]) {
+    spaceship.accelerate(ACCEL_PER_SEC * (dt / 1000));
+  }
+  if (keys["KeyS"] || keys["ArrowDown"]) {
+    spaceship.decelerate(ACCEL_PER_SEC * (dt / 1000));
+  }
+
   // Update Positions
   spaceship.updatePosition(width, height, dt);
 
-  if (bullets.length > 0) {
-    bullets.forEach((bullet) => {
-      bullet.updatePosition(width, height, dt);
-    });
+  // Bullets don't wrap — remove them as soon as they leave the playfield.
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const bullet = bullets[i];
+    bullet.updatePosition(width, height, dt);
+
+    if (bullet.isOffScreen(width, height)) {
+      bullets.splice(i, 1);
+    }
   }
 
   if (asteroids.length > 0) {
@@ -313,12 +334,7 @@ const updatePhysics = () => {
 
         if (newAsteroid == 0) {
           asteroids.splice(j, 1);
-          score += difficulty.getDiff();
-
-          // New Life Check
-          if (score % 150 <= difficulty.getDiff() - 1) {
-            lives++;
-          }
+          addScore(difficulty.getDiff());
         } else {
           asteroids.push(newAsteroid[0]);
           asteroids.push(newAsteroid[1]);
@@ -346,9 +362,12 @@ const pauseGame = () => {
     message = "Paused";
   } else {
     // Resuming: discard time that passed while paused so the world doesn't
-    // fast-forward through it on the next physics drain.
+    // fast-forward through it on the next physics drain (and so score/spawn
+    // gating don't fire a burst of ticks to "catch up").
     lastTick = performance.now();
     accumulator = 0;
+    scoreAccumulator = 0;
+    spawnAccumulator = 0;
   }
   pframe = false;
 };
@@ -362,11 +381,14 @@ const spawnAsteroid = () => {
   let spawndy;
   let newAsteroid;
 
+  // Into-screen speed is floored so an asteroid can't spawn nearly
+  // stationary and hug its spawn edge indefinitely; the tangential
+  // component may still be ~0.
   switch (SPAWNS[sIndex]) {
     case "TOP":
       spawnx = Math.random() * width;
       spawndx = Math.random() * 0.2;
-      spawndy = Math.random() * 0.2;
+      spawndy = MIN_SPAWN_SPEED + Math.random() * (0.2 - MIN_SPAWN_SPEED);
 
       spawndx *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
 
@@ -375,7 +397,7 @@ const spawnAsteroid = () => {
       break;
     case "RIGHT":
       spawny = Math.random() * height;
-      spawndx = Math.random() * -0.2;
+      spawndx = -(MIN_SPAWN_SPEED + Math.random() * (0.2 - MIN_SPAWN_SPEED));
       spawndy = Math.random() * 0.2;
 
       spawndy *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
@@ -386,7 +408,7 @@ const spawnAsteroid = () => {
     case "BOTTOM":
       spawnx = Math.random() * width;
       spawndx = Math.random() * 0.2;
-      spawndy = Math.random() * -0.2;
+      spawndy = -(MIN_SPAWN_SPEED + Math.random() * (0.2 - MIN_SPAWN_SPEED));
 
       spawndx *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
 
@@ -395,7 +417,7 @@ const spawnAsteroid = () => {
       break;
     case "LEFT":
       spawny = Math.random() * height;
-      spawndx = Math.random() * 0.2;
+      spawndx = MIN_SPAWN_SPEED + Math.random() * (0.2 - MIN_SPAWN_SPEED);
       spawndy = Math.random() * 0.2;
 
       spawndy *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
@@ -421,14 +443,9 @@ const renderGraphics = () => {
   });
 
   // Draw the bullets
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    const bullet = bullets[i];
-    if (!bullet.checkDistance(frame)) {
-      canvas.drawEntity(bullet);
-    } else {
-      bullets.splice(i, 1);
-    }
-  }
+  bullets.forEach((bullet) => {
+    canvas.drawEntity(bullet);
+  });
 
   // Draw the score
   canvas.drawText(score, canvas.width / 2, 20, "center");

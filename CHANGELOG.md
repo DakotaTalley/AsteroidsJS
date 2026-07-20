@@ -22,6 +22,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   scoring no longer runs ~1.7% slow.
 - Asteroid spawning is decided once per frame instead of once per physics
   sub-step, so the field no longer jumps to the spawn cap in a single frame.
+- Pressing P/Enter on the difficulty or game-over screen no longer unpauses
+  a hidden simulation behind the menu (which could silently inflate the
+  saved high score).
+- Confirming the difficulty menu with Space no longer fires a bullet on the
+  first playing frame.
+- Held keys are released when the window loses focus, so the ship no longer
+  keeps rotating/thrusting/shooting after an Alt-Tab.
+- Keys pressed in the reset-high-score dialog no longer leak into the game
+  behind it, and the dialog's Yes/Cancel buttons are keyboard-operable
+  again; `preventDefault` is now limited to game keys so Tab/F5 keep their
+  browser behavior. Closing the dialog also drops focus from its opener
+  button so the next Enter press pauses the game instead of reopening the
+  dialog.
 
 ## [1.1.0] - 2026-07-19
 

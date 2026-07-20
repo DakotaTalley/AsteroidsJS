@@ -22,20 +22,40 @@ let keys = {};
 // completes faster than the animation frame still registers as a press.
 let pressed = {};
 
+// Keys whose browser default (scrolling) would disrupt the game; everything
+// else (Tab, F5, ...) keeps its native behavior.
+const GAME_KEYS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"];
+
+// Keyup is not gated on the dialog: a key released while the dialog is open
+// must still clear its held state, or it would stick until re-pressed.
 window.addEventListener("keyup", (e) => {
   keys[e.code] = false;
   pframe = true;
 });
 
 window.addEventListener("keydown", (e) => {
+  // While the reset-high-score dialog is open, keys belong to the dialog —
+  // its buttons need their native Enter/Space activation un-prevented.
+  if (resetHighDialog.open) return;
   // preventDefault must run for auto-repeat events too, or held arrows/Space
   // scroll the page mid-game.
-  e.preventDefault();
+  if (GAME_KEYS.includes(e.code)) e.preventDefault();
   // Ignore OS key auto-repeat so held keys don't re-latch `pressed` every
   // frame (this was the source of the pause-toggle flicker on held Enter/P).
   if (e.repeat) return;
   keys[e.code] = true;
   pressed[e.code] = true;
+});
+
+// Focus loss swallows keyup events; treat every held key as released so the
+// ship doesn't keep rotating/thrusting/shooting after an Alt-Tab. Also pause
+// an active game outright — playing on with input silently discarded is
+// more confusing than the game visibly stopping until refocus.
+window.addEventListener("blur", () => {
+  keys = {};
+  if (!paused) {
+    pauseGame();
+  }
 });
 //// Game Variables
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
@@ -70,6 +90,14 @@ resetHighConfirm.addEventListener("click", () => {
 
 resetHighCancel.addEventListener("click", () => {
   resetHighDialog.close();
+});
+
+// Closing the dialog restores focus to the opener button; drop it so the
+// player's next Enter press pauses the game instead of natively
+// re-activating the button and reopening the dialog. Fires for the Yes,
+// Cancel, and Escape close paths alike.
+resetHighDialog.addEventListener("close", () => {
+  rButton.blur();
 });
 
 // Set up scene
@@ -108,13 +136,30 @@ const queueTick = () => {
 
 // Game Loop
 const gameTick = () => {
+  // While the reset-high-score dialog has focus, freeze the game entirely.
+  // This is more than just skipping input: the keydown that *activates* the
+  // dialog's opener button (e.g. pressing Enter on a focused "Reset High
+  // Score" button) fires and latches `pressed["Enter"]` *before* the dialog
+  // is open, so the keydown listener's `resetHighDialog.open` check can't
+  // catch it — the stray press would otherwise reach the pause toggle below
+  // on this very next tick. Checking here, fresh at the top of every tick,
+  // catches that case regardless of timing.
+  if (resetHighDialog.open) {
+    pressed = {};
+    queueTick();
+    return;
+  }
+
   // Check for Paused
   if (paused) {
-    if (pressed["Enter"] || pressed["KeyP"]) {
-      pauseGame();
-    }
-
+    // On the difficulty/game-over screens (`newGame`), input belongs to
+    // chooseDiff alone — unpausing here would run a hidden simulation
+    // behind the menu.
     if (!newGame) {
+      if (pressed["Enter"] || pressed["KeyP"]) {
+        pauseGame();
+      }
+
       drawMessage();
     }
   } else {
@@ -411,6 +456,9 @@ const chooseDiff = () => {
     score = 0;
     reset();
     pauseGame();
+    // Space is also the fire key; the press that confirmed the menu must
+    // not double as a held trigger on the first playing frame.
+    keys["Space"] = false;
   }
 
   let xpos;

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Physics accumulator unit mismatch: the accumulator collects millisecond
+  deltas but the step was `0.01`, so physics ran ~100,000 steps/second. The
+  step is now 10 ms (~100 steps/second) with identical movement speeds, since
+  entity velocities were already effectively px/ms.
+- Unpausing no longer fast-forwards the world through the paused time (or
+  hangs after a long pause): the tick clock resets on resume, and per-frame
+  elapsed time is clamped to 100 ms.
+- Holding Enter/P no longer flickers the pause state ~30×/second; OS key
+  auto-repeat is ignored and the dead `timeLastPause` debounce is removed.
+- Frame counter now cycles in exactly 60 ticks instead of 61, so per-second
+  scoring no longer runs ~1.7% slow.
+- Asteroid spawning is decided once per frame instead of once per physics
+  sub-step, so the field no longer jumps to the spawn cap in a single frame.
+
 ## [1.1.0] - 2026-07-19
 
 ### Added

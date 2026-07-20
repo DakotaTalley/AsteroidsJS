@@ -8,9 +8,14 @@ import Difficulty from "./models/difficulty";
 //// Game Timing
 const GAME_FPS = 60;
 let lastTick = performance.now();
-const dt = 0.01;
+// Physics step, in ms (accumulator is fed ms deltas from performance.now()).
+const dt = 10;
+// Preserves the original per-frame ship acceleration impulse now that `dt`
+// is ms-scale; accelerate()/decelerate() are still called once per rAF frame.
+const ACCEL_IMPULSE = 0.01;
+// Spiral-of-death guard: cap how much elapsed time one frame can queue.
+const MAX_FRAME_MS = 100;
 let accumulator = 0;
-let timeLastPause = performance.now();
 //// Input
 let keys = {};
 // Latches a keydown edge for one gameTick, so a keydown+keyup pair that
@@ -23,9 +28,14 @@ window.addEventListener("keyup", (e) => {
 });
 
 window.addEventListener("keydown", (e) => {
+  // preventDefault must run for auto-repeat events too, or held arrows/Space
+  // scroll the page mid-game.
+  e.preventDefault();
+  // Ignore OS key auto-repeat so held keys don't re-latch `pressed` every
+  // frame (this was the source of the pause-toggle flicker on held Enter/P).
+  if (e.repeat) return;
   keys[e.code] = true;
   pressed[e.code] = true;
-  e.preventDefault();
 });
 //// Game Variables
 const SPAWNS = ["TOP", "RIGHT", "BOTTOM", "LEFT"];
@@ -100,9 +110,7 @@ const queueTick = () => {
 const gameTick = () => {
   // Check for Paused
   if (paused) {
-    let now = performance.now();
-
-    if (now - timeLastPause > 1000 && (pressed["Enter"] || pressed["KeyP"])) {
+    if (pressed["Enter"] || pressed["KeyP"]) {
       pauseGame();
     }
 
@@ -118,6 +126,10 @@ const gameTick = () => {
 
     // check input
     checkInput();
+
+    // Asteroid Spawning — decided once per gameTick, not once per physics
+    // sub-step (the gating condition is constant for the whole tick).
+    checkAsteroidSpawn();
 
     // update physics
     while (accumulator >= dt) {
@@ -145,7 +157,7 @@ const gameTick = () => {
 
 const updateTiming = () => {
   let current = performance.now();
-  let elapsed = current - lastTick;
+  let elapsed = Math.min(current - lastTick, MAX_FRAME_MS);
   lastTick = current;
   accumulator += elapsed;
 };
@@ -158,7 +170,7 @@ const updateGame = () => {
   }
 
   // Frame Counter
-  if (frame <= GAME_FPS) {
+  if (frame < GAME_FPS) {
     frame += 1;
   } else {
     frame = 1;
@@ -186,19 +198,15 @@ const checkInput = () => {
 
   // Ship Acceleration / Deceleration
   if (keys["KeyW"] || keys["ArrowUp"]) {
-    spaceship.accelerate(dt);
+    spaceship.accelerate(ACCEL_IMPULSE);
   }
   if (keys["KeyS"] || keys["ArrowDown"]) {
-    spaceship.decelerate(dt);
+    spaceship.decelerate(ACCEL_IMPULSE);
   }
 
   // Pause
   if (pressed["Enter"] || pressed["KeyP"]) {
-    let now = performance.now();
-
-    if (now - timeLastPause > 2000) {
-      pauseGame();
-    }
+    pauseGame();
   }
 
   // Shooting
@@ -213,13 +221,13 @@ const checkInput = () => {
   }
 };
 
-const updatePhysics = () => {
-  // Update Scene
-  // Asteroid Spawning
+const checkAsteroidSpawn = () => {
   if (asteroids.length < Math.log(score + 1) && frame % 30 == 0) {
     spawnAsteroid();
   }
+};
 
+const updatePhysics = () => {
   // Update Positions
   spaceship.updatePosition(width, height, dt);
 
@@ -291,6 +299,11 @@ const pauseGame = () => {
   paused = !paused;
   if (paused) {
     message = "Paused";
+  } else {
+    // Resuming: discard time that passed while paused so the world doesn't
+    // fast-forward through it on the next physics drain.
+    lastTick = performance.now();
+    accumulator = 0;
   }
   pframe = false;
 };

@@ -24,9 +24,11 @@ function Canvas(id) {
 
   // Generic entity renderer — reads the drawing primitive returned by
   // entity.getDrawShape() and issues the actual context calls, so adding a
-  // new entity type doesn't require a new Canvas draw method.
-  this.drawEntity = function (entity) {
-    const shape = entity.getDrawShape();
+  // new entity type doesn't require a new Canvas draw method. alpha is
+  // forwarded to getDrawShape so it can interpolate between physics steps;
+  // omitting it draws the entity at its current (post-tick) position.
+  this.drawEntity = function (entity, alpha) {
+    const shape = entity.getDrawShape(alpha);
 
     this.context.translate(shape.x, shape.y);
     if (shape.rotation) {

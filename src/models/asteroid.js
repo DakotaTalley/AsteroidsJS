@@ -41,14 +41,17 @@ class Asteroid extends Entity {
 
   // Drawing primitive for Canvas#drawEntity — a stroked polygon in
   // asteroid-local space (localBounds already closes back to its first
-  // point), translated by the Canvas at draw time.
-  getDrawShape() {
+  // point), translated by the Canvas at draw time. alpha (default 1, i.e.
+  // "current position") interpolates between the last physics step and
+  // this one — see Entity#getInterpolatedPosition.
+  getDrawShape(alpha = 1) {
+    const { x, y } = this.getInterpolatedPosition(alpha);
     return {
       mode: "stroke",
       color: this.color,
       lineWidth: 1,
-      x: this.x,
-      y: this.y,
+      x,
+      y,
       points: this.localBounds,
     };
   }

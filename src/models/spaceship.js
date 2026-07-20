@@ -79,14 +79,17 @@ class Spaceship extends Entity {
   }
 
   // Drawing primitive for Canvas#drawEntity — a filled triangle in
-  // ship-local space, positioned/rotated by the Canvas at draw time.
-  getDrawShape() {
+  // ship-local space, positioned/rotated by the Canvas at draw time. alpha
+  // (default 1, i.e. "current position") interpolates between the last
+  // physics step and this one — see Entity#getInterpolatedPosition.
+  getDrawShape(alpha = 1) {
+    const { x, y } = this.getInterpolatedPosition(alpha);
     return {
       mode: "fill",
       color: this.color,
-      x: this.x,
-      y: this.y,
-      rotation: (this.orientation * Math.PI) / 180,
+      x,
+      y,
+      rotation: (this.getInterpolatedOrientation(alpha) * Math.PI) / 180,
       points: [
         { x: 0, y: -this.h / 2 },
         { x: -this.w / 2, y: this.h / 2 },

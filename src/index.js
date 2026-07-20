@@ -194,8 +194,11 @@ const gameTick = () => {
       accumulator -= dt;
     }
 
-    // render graphics
-    renderGraphics();
+    // render graphics — interpolate between the last physics step and the
+    // next one so motion isn't capped at the simulation's ~100 Hz tick rate
+    // on higher-refresh displays. alpha is how far through the next (not
+    // yet run) physics step the accumulator already is.
+    renderGraphics(accumulator / dt);
   }
 
   // Check for New Game
@@ -274,6 +277,14 @@ const checkAsteroidSpawn = () => {
 };
 
 const updatePhysics = () => {
+  // Snapshot pre-step state for render-time interpolation (see
+  // renderGraphics/Entity#getInterpolatedPosition) before anything moves —
+  // renderGraphics runs once per rAF callback, which can be more or less
+  // often than this fixed-dt step runs.
+  spaceship.savePreviousState();
+  bullets.forEach((bullet) => bullet.savePreviousState());
+  asteroids.forEach((asteroid) => asteroid.savePreviousState());
+
   // Steering / thrust — driven by held keys, applied once per fixed physics
   // step so turn rate and acceleration are tied to real time rather than
   // the display's refresh rate.
@@ -431,20 +442,20 @@ const spawnAsteroid = () => {
 };
 
 // Draw Scene
-const renderGraphics = () => {
+const renderGraphics = (alpha) => {
   canvas.setBackground("#000000");
 
   // Draw the spaceship
-  canvas.drawEntity(spaceship);
+  canvas.drawEntity(spaceship, alpha);
 
   // Draw the asteroids
   asteroids.forEach((asteroid) => {
-    canvas.drawEntity(asteroid);
+    canvas.drawEntity(asteroid, alpha);
   });
 
   // Draw the bullets
   bullets.forEach((bullet) => {
-    canvas.drawEntity(bullet);
+    canvas.drawEntity(bullet, alpha);
   });
 
   // Draw the score

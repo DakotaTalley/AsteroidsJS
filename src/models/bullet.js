@@ -40,13 +40,16 @@ class Bullet extends Entity {
   }
 
   // Drawing primitive for Canvas#drawEntity — a filled rectangle in
-  // bullet-local space, translated by the Canvas at draw time.
-  getDrawShape() {
+  // bullet-local space, translated by the Canvas at draw time. alpha
+  // (default 1, i.e. "current position") interpolates between the last
+  // physics step and this one — see Entity#getInterpolatedPosition.
+  getDrawShape(alpha = 1) {
+    const { x, y } = this.getInterpolatedPosition(alpha);
     return {
       mode: "fill",
       color: this.color,
-      x: this.x,
-      y: this.y,
+      x,
+      y,
       points: [
         { x: -this.w / 2, y: -this.h / 2 },
         { x: this.w / 2, y: -this.h / 2 },

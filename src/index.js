@@ -513,5 +513,21 @@ const drawMessage = () => {
   canvas.drawText(message, canvas.width / 2, canvas.height / 2, "center");
 };
 
+// Read-only state snapshot for e2e tests: canvas-rendered score/lives/etc.
+// aren't DOM-queryable, so Playwright reads this instead. Dead-code-eliminated
+// from production builds since Vite inlines import.meta.env.DEV as `false`.
+if (import.meta.env.DEV) {
+  window.__gameState = () => ({
+    score,
+    highScore,
+    lives,
+    paused,
+    newGame,
+    difficulty: difficulty.getDiff(),
+    asteroids: asteroids.length,
+    bullets: bullets.length,
+  });
+}
+
 reset();
 startGame();

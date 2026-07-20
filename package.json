@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "lint": "eslint .",
     "format": "prettier --check .",
     "build": "vite build",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.61.1",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
     "gh-pages": "^6.3.0",

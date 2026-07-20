@@ -7,39 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-
-- Physics accumulator unit mismatch: the accumulator collects millisecond
-  deltas but the step was `0.01`, so physics ran ~100,000 steps/second. The
-  step is now 10 ms (~100 steps/second) with identical movement speeds, since
-  entity velocities were already effectively px/ms.
-- Unpausing no longer fast-forwards the world through the paused time (or
-  hangs after a long pause): the tick clock resets on resume, and per-frame
-  elapsed time is clamped to 100 ms.
-- Holding Enter/P no longer flickers the pause state ~30×/second; OS key
-  auto-repeat is ignored and the dead `timeLastPause` debounce is removed.
-- Frame counter now cycles in exactly 60 ticks instead of 61, so per-second
-  scoring no longer runs ~1.7% slow.
-- Asteroid spawning is decided once per frame instead of once per physics
-  sub-step, so the field no longer jumps to the spawn cap in a single frame.
-- Pressing P/Enter on the difficulty or game-over screen no longer unpauses
-  a hidden simulation behind the menu (which could silently inflate the
-  saved high score).
-- Confirming the difficulty menu with Space no longer fires a bullet on the
-  first playing frame.
-- Held keys are released when the window loses focus, so the ship no longer
-  keeps rotating/thrusting/shooting after an Alt-Tab.
-- Keys pressed in the reset-high-score dialog no longer leak into the game
-  behind it, and the dialog's Yes/Cancel buttons are keyboard-operable
-  again; `preventDefault` is now limited to game keys so Tab/F5 keep their
-  browser behavior. Closing the dialog also drops focus from its opener
-  button so the next Enter press pauses the game instead of reopening the
-  dialog.
-
-## [1.1.0] - 2026-07-19
+## [1.1.0] - 2026-07-20
 
 ### Added
 
+- Playwright e2e test suite (`e2e/`) covering game lifecycle, keyboard
+  input/difficulty selection, and high-score reset flows through a
+  dev-only `window.__gameState()` hook, since canvas-rendered state
+  isn't otherwise DOM-queryable.
+- Fixed-timestep physics with render-time interpolation: entities
+  snapshot their previous state each physics step and blend toward the
+  current one at render time, closing the last gap in decoupling
+  simulation speed from display refresh rate.
 - Self-hosted the Turret Road font instead of loading it from the Google
   Fonts CDN, removing a third-party render-blocking request and avoiding
   leaking visitor IPs to Google on every page load.
@@ -105,6 +84,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reading `entity.color`, so entity color is now genuinely configurable.
 - An unused variable and dead zero-initializers in `spawnAsteroid`
   (`src/index.js`), surfaced by the new ESLint config.
+- Physics accumulator unit mismatch: the accumulator collects millisecond
+  deltas but the step was `0.01`, so physics ran ~100,000 steps/second. The
+  step is now 10 ms (~100 steps/second) with identical movement speeds, since
+  entity velocities were already effectively px/ms.
+- Steering, thrust, score, extra-life awards, and asteroid spawn gating are
+  now tied to real elapsed time instead of `requestAnimationFrame` ticks, so
+  they no longer scale with display refresh rate.
+- Ship collision hitbox now rotates with orientation, and ship/bullet-vs-
+  asteroid collision uses a circle test instead of an oversized AABB.
+- Spawned asteroids' into-screen speed is floored so they can't hug the
+  edge, and bullets use a positional off-screen check instead of a
+  frame-counter-based lifetime, avoiding pause/clock edge cases.
+- Unpausing no longer fast-forwards the world through the paused time (or
+  hangs after a long pause): the tick clock resets on resume, and per-frame
+  elapsed time is clamped to 100 ms.
+- Holding Enter/P no longer flickers the pause state ~30×/second; OS key
+  auto-repeat is ignored and the dead `timeLastPause` debounce is removed.
+- Frame counter now cycles in exactly 60 ticks instead of 61, so per-second
+  scoring no longer runs ~1.7% slow.
+- Asteroid spawning is decided once per frame instead of once per physics
+  sub-step, so the field no longer jumps to the spawn cap in a single frame.
+- Pressing P/Enter on the difficulty or game-over screen no longer unpauses
+  a hidden simulation behind the menu (which could silently inflate the
+  saved high score).
+- Confirming the difficulty menu with Space no longer fires a bullet on the
+  first playing frame.
+- Held keys are released when the window loses focus, so the ship no longer
+  keeps rotating/thrusting/shooting after an Alt-Tab.
+- Keys pressed in the reset-high-score dialog no longer leak into the game
+  behind it, and the dialog's Yes/Cancel buttons are keyboard-operable
+  again; `preventDefault` is now limited to game keys so Tab/F5 keep their
+  browser behavior. Closing the dialog also drops focus from its opener
+  button so the next Enter press pauses the game instead of reopening the
+  dialog.
+- ESLint flat config didn't declare Node globals for `playwright.config.js`,
+  `vite.config.js`, or `e2e/**`, breaking `npm run lint` in CI once the
+  Playwright suite was added; `e2e/input.spec.js` is also now Prettier-
+  formatted so `npm run format` passes again.
 
 ### Removed
 

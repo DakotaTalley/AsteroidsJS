@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { getState, waitForState, startGame, tapAcrossFrame } from "./helpers.js";
+import {
+  getState,
+  waitForState,
+  startGame,
+  tapAcrossFrame,
+} from "./helpers.js";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
@@ -28,14 +33,10 @@ test("ArrowRight held across a frame increases difficulty on the selection scree
 
   // Already at max (HARD) — one more tap must not overshoot.
   await tapAcrossFrame(page, "ArrowRight");
-  await expect
-    .poll(() => getState(page).then((s) => s.difficulty))
-    .toBe(3);
+  await expect.poll(() => getState(page).then((s) => s.difficulty)).toBe(3);
 });
 
-test("ArrowLeft held across a frame decreases difficulty", async ({
-  page,
-}) => {
+test("ArrowLeft held across a frame decreases difficulty", async ({ page }) => {
   await tapAcrossFrame(page, "ArrowRight");
   await waitForState(page, () => window.__gameState().difficulty === 2);
 

@@ -14,5 +14,13 @@ export default [
       },
     },
   },
+  {
+    files: ["playwright.config.js", "vite.config.js", "e2e/**/*.js"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
   eslintConfigPrettier,
 ];

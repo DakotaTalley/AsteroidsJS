@@ -53,6 +53,19 @@ New rules are added with the `add-rule` skill, which picks the right table and k
 |---|---|---|---|---|
 | `DOC-001` | Explain Non-Obvious Why | Document the reasoning behind non-obvious decisions, not what the code already shows. | `mutable` | `info` |
 
+## Accessibility Rules (A11Y)
+
+| ID | Title | Description | Mutability | Enforcement |
+|---|---|---|---|---|
+| `A11Y-001` | Semantic HTML Before ARIA | Use native semantic elements (`button`, `nav`, `header`, `main`, `label`, etc.) instead of a generic `div`/`span`; add ARIA roles, states, or properties only when no native element or attribute already provides the needed semantics, and keep any ARIA state in sync with the UI via JS. | `mutable` | `warning` |
+| `A11Y-002` | Text Alternatives for Images | Every `img` needs an `alt` attribute — descriptive alt text for meaningful images, `alt=""` for purely decorative ones. | `mutable` | `warning` |
+| `A11Y-003` | Labeled Form Controls | Every form input has an associated `label` (via `for`/`id` or wrapping) or other accessible name; placeholder text is not a substitute for a label. | `mutable` | `warning` |
+| `A11Y-004` | Full Keyboard Operability | Every interactive control must be reachable and operable via keyboard alone — no keyboard traps, avoid `tabindex` greater than 0, and a non-native clickable element (e.g. a `div` with `onclick`) needs matching `keydown` handling plus an appropriate `role`/`tabindex`. | `mutable` | `warning` |
+| `A11Y-005` | Visible Focus Indicator | Never remove a focus outline (`outline: none`, etc.) without providing an equally visible custom `:focus`/`:focus-visible` style. | `mutable` | `warning` |
+| `A11Y-006` | Sufficient Color Contrast & Non-Color Cues | Text/background contrast meets WCAG AA (4.5:1 for normal text, 3:1 for large text and UI components); never convey information — errors, state, links — by color alone. | `mutable` | `warning` |
+| `A11Y-007` | Descriptive Link and Button Text | Link/button text must be meaningful out of context — avoid "click here"/"read more" — and indicate when a link opens a new tab or points to a non-HTML file type. | `mutable` | `info` |
+| `A11Y-008` | Captions and Transcripts for Media | Provide captions/subtitles for video and transcripts for audio content; don't rely on auto-generated captions alone for published content. | `mutable` | `warning` |
+
 ## Retired Rule IDs
 
 IDs that once existed in this file and must never be reused, even though the number is free in the table above (e.g. a `mutable` rule a project removed, or an `immutable` rule the template retired). `add-rule` checks this list, not just the visible tables, before assigning a new ID.
